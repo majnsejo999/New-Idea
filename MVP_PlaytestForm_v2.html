@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Đánh Giá Prototype Playtest — Chấm Điểm Tự Động</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{--font:'Inter',system-ui,sans-serif;--bg:#f8fafc;--card:#fff;--t1:#0f172a;--t2:#475569;--mt:#94a3b8;--bd:#e2e8f0;--bh:#cbd5e1;--go:#10b981;--go-l:#ecfdf5;--go-d:#065f46;--cd:#f59e0b;--cd-l:#fffbeb;--cd-d:#92400e;--st:#ef4444;--st-l:#fef2f2;--st-d:#991b1b;--br:#3b82f6;--br-l:#eff6ff;--pp:#8b5cf6;--pp-l:#f5f3ff;--rl:12px;--rm:8px;--ss:0 1px 3px 0 rgb(0 0 0/.05);--sm:0 4px 6px -1px rgb(0 0 0/.05);--tr:all .2s ease}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:14px;line-height:1.5;padding:1.5rem 1rem}
+.container{max-width:920px;margin:0 auto}
+.hdr{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:2rem;border-radius:var(--rl);color:#fff;margin-bottom:1.5rem;box-shadow:var(--sm)}
+.hdr h1{font-size:1.3rem;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.hdr p{color:var(--mt);font-size:.85rem;line-height:1.6}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600}
+.badge-p{background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)}
+.badge-g{background:rgba(16,185,129,.2);color:#34d399;border:1px solid rgba(16,185,129,.3)}
+.badge-o{background:rgba(249,115,22,.2);color:#fb923c;border:1px solid rgba(249,115,22,.3)}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:1.5rem}
+.mf{background:var(--card);border:1px solid var(--bd);border-radius:var(--rm);padding:10px}
+.mf label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);display:block;margin-bottom:4px}
+.mf input{width:100%;border:1px solid var(--bd);border-radius:6px;padding:7px 10px;font:13px var(--font);color:var(--t1);background:#f8fafc}
+.mf input:focus{outline:none;border-color:var(--br);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.steps{display:flex;gap:4px;margin-bottom:1.5rem;background:#e2e8f0;padding:4px;border-radius:var(--rm);overflow-x:auto}
+.step-tab{font-size:11px;font-weight:600;padding:10px 4px;cursor:pointer;color:var(--t2);border-radius:var(--rm);white-space:nowrap;display:flex;align-items:center;gap:4px;transition:var(--tr);flex:1;justify-content:center}
+.step-tab:hover:not(.active){color:var(--t1);background:rgba(255,255,255,.5)}
+.step-tab.active{color:var(--t1);background:var(--card);box-shadow:var(--ss)}
+.step-tab .dot{width:8px;height:8px;border-radius:50%;background:var(--go);display:none}
+.step-tab.filled .dot{display:block}
+.panel{display:none;animation:fi .2s ease}.panel.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.session-intro{padding:14px 18px;border-radius:var(--rm);margin-bottom:1.25rem;font-size:13px;line-height:1.7;border-left:4px solid var(--br);background:var(--br-l);color:#1e40af}
+.qcard{background:var(--card);border:1px solid var(--bd);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;box-shadow:var(--ss);transition:var(--tr)}
+.qcard:hover{border-color:var(--bh);box-shadow:var(--sm)}
+.qcard.answered{border-left:3px solid var(--go)}
+.q-id{font-size:11px;font-weight:700;color:var(--pp);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.q-maps{font-size:10px;color:var(--mt);font-weight:400;margin-left:auto}
+.q-text{font-size:14px;font-weight:600;color:#1e293b;margin-bottom:10px;line-height:1.5}
+.q-why{font-size:11.5px;color:#6d28d9;margin-bottom:8px;line-height:1.6;padding:8px 12px;background:#f5f3ff;border-radius:var(--rm);border:1px solid #e9d5ff;display:flex;align-items:flex-start;gap:6px}
+.q-why i{font-size:14px;flex-shrink:0;margin-top:1px;color:#a78bfa}.q-why span{flex:1}
+.q-hint{font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.6;padding:8px 12px;background:#f8fafc;border-radius:var(--rm);border:1px solid var(--bd)}
+.yn-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.yn-btn{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--bd);background:#fff;color:var(--t2);transition:var(--tr)}
+.yn-btn:hover{border-color:var(--bh)}
+.yn-btn.sel-y{border-color:var(--go);background:var(--go-l);color:var(--go-d)}
+.yn-btn.sel-n{border-color:var(--st);background:var(--st-l);color:var(--st-d)}
+.yn-btn.sel-p{border-color:var(--cd);background:var(--cd-l);color:var(--cd-d)}
+.sel-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.sel-btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--bd);background:#fff;color:var(--t2);transition:var(--tr)}
+.sel-btn:hover{border-color:var(--bh)}
+.sel-btn.sel{border-color:var(--br);background:var(--br-l);color:var(--br)}
+.num-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.num-row input[type=number]{width:80px;border:1px solid var(--bd);border-radius:6px;padding:7px 10px;font:13px var(--font);text-align:center}
+.num-row input:focus{outline:none;border-color:var(--br)}
+.num-row span{font-size:12px;color:var(--t2)}
+.q-note{width:100%;font-size:12px;padding:8px 12px;border:1px solid var(--bd);border-radius:var(--rm);background:var(--bg);color:var(--t1);resize:vertical;min-height:42px;font-family:var(--font);margin-top:4px}
+.q-note:focus{outline:none;border-color:var(--br);background:#fff}
+.drop-zone{border:2px dashed var(--bh);border-radius:var(--rl);padding:2rem;text-align:center;cursor:pointer;transition:var(--tr);background:#fafbfc;margin-bottom:12px;position:relative}
+.drop-zone:hover,.drop-zone.over{border-color:var(--br);background:var(--br-l)}
+.drop-zone i{font-size:2rem;color:var(--mt);display:block;margin-bottom:8px}
+.drop-zone p{font-size:13px;color:var(--t2);margin-bottom:4px}
+.drop-zone span{font-size:11px;color:var(--mt)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:12px}
+.gallery-item{position:relative;border-radius:var(--rm);overflow:hidden;border:1px solid var(--bd);aspect-ratio:4/3;background:#f1f5f9}
+.gallery-item img{width:100%;height:100%;object-fit:cover}
+.gallery-item .del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:0;transition:var(--tr)}
+.gallery-item:hover .del{opacity:1}
+.compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;padding:16px;background:#f8fafc;border-radius:var(--rl);border:1px solid var(--bd)}
+.compare-col h4{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.compare-col h4 i{font-size:16px}
+.compare-col .gallery{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+.big-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;font-size:16px;font-weight:700;border-radius:var(--rl);cursor:pointer;border:none;transition:var(--tr);margin:1.5rem 0}
+.big-btn.score{background:linear-gradient(135deg,#312e81,#4f46e5);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.3)}
+.big-btn.score:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(79,70,229,.4)}
+.big-btn.export{background:var(--br-l);color:var(--br);border:2px solid rgba(59,130,246,.3)}
+.big-btn.export:hover{background:#dbeafe}
+.progress-strip{background:var(--bd);border-radius:999px;height:8px;margin-bottom:1.5rem;overflow:hidden}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pp),var(--br));transition:width .4s ease}
+.progress-lbl{font-size:12px;color:var(--t2);font-weight:500;margin-bottom:6px;display:flex;justify-content:space-between}
+.result-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--rl);padding:2rem;box-shadow:var(--sm);display:none}
+.result-card.show{display:block}
+.big-score-wrap{display:flex;align-items:center;justify-content:space-between;background:#f8fafc;padding:1.5rem;border-radius:var(--rl);border:1px solid var(--bd);margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+.big-score{font-size:3.5rem;font-weight:800;line-height:1;letter-spacing:-.04em}
+.pbar-wrap{background:#f1f5f9;border-radius:999px;height:12px;overflow:hidden;margin-bottom:1.5rem;border:1px solid var(--bd)}
+.pbar{height:100%;border-radius:999px;transition:width .4s ease}
+.radar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.radar-lbl{font-size:12px;font-weight:600;color:var(--t2);width:200px;flex-shrink:0}
+.radar-bar-wrap{flex:1;background:#f1f5f9;border-radius:999px;height:8px;overflow:hidden;border:1px solid var(--bd)}
+.radar-bar{height:100%;border-radius:999px;transition:width .4s}
+.radar-val{font-size:12px;font-weight:700;min-width:36px;text-align:right}
+.verdict{padding:1rem 1.25rem;border-radius:var(--rm);font-size:14px;font-weight:600;border-left:4px solid;margin:1.5rem 0;box-shadow:var(--ss)}
+.verdict.vgo{background:var(--go-l);color:var(--go-d);border-color:var(--go)}
+.verdict.vcd{background:var(--cd-l);color:var(--cd-d);border-color:var(--cd)}
+.verdict.vst{background:var(--st-l);color:var(--st-d);border-color:var(--st)}
+.issue-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:12px 0}
+.issue-card{padding:12px 16px;border-radius:var(--rm);font-size:12.5px;line-height:1.6;border-left:3px solid}
+.issue-card.cr{background:var(--st-l);border-color:var(--st);color:var(--st-d)}
+.issue-card.wr{background:var(--cd-l);border-color:var(--cd);color:var(--cd-d)}
+.issue-card.ok{background:var(--go-l);border-color:var(--go);color:var(--go-d)}
+.detail-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:12.5px}
+.detail-table th{background:#f1f5f9;padding:8px 12px;text-align:left;font-weight:700;color:var(--t2);border-bottom:2px solid var(--bd)}
+.detail-table td{padding:8px 12px;border-bottom:1px solid var(--bd);vertical-align:top}
+.detail-table .sc{font-weight:800;font-size:14px;text-align:center;width:50px}
+.note-area{width:100%;font-size:13px;padding:12px;border:1px solid var(--bd);border-radius:var(--rm);background:#fff;color:var(--t1);resize:vertical;min-height:80px;font-family:var(--font);margin-top:1rem}
+.note-area:focus{outline:none;border-color:var(--br)}
+@media(max-width:640px){.compare-wrap{grid-template-columns:1fr}.steps{flex-wrap:nowrap;overflow-x:auto}.step-tab{min-width:110px}}
+.ai-box{background:linear-gradient(135deg,#ede9fe,#e0e7ff);border:1px solid #c7d2fe;border-radius:var(--rl);padding:20px;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.ai-box::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(139,92,246,.08);border-radius:50%}
+.ai-box .ai-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;background:rgba(139,92,246,.15);color:#6d28d9;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.ai-box h3{font-size:14px;font-weight:700;color:#312e81;margin-bottom:8px}
+.ai-box .score-row{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}
+.ai-box .sc-pill{padding:8px 14px;border-radius:var(--rm);font-size:12px;font-weight:600;border:1px solid}
+.ai-box .sc-pill b{font-size:16px;display:block;margin-bottom:2px}
+.ai-box .findings{font-size:12.5px;color:#1e293b;line-height:1.8}
+.ai-box .findings li{padding:2px 0}
+.ai-box .tag-cr{color:var(--st-d);font-weight:600}
+.ai-box .tag-wr{color:var(--cd-d);font-weight:600}
+.ai-box .tag-ok{color:var(--go-d);font-weight:600}
+.ai-box .reco{background:#fff;border:1px solid var(--bd);border-radius:var(--rm);padding:12px 14px;margin-top:12px;font-size:12.5px;line-height:1.7;color:#1e293b}
+.ai-box .reco b{color:#312e81}
+.prefilled-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(139,92,246,.12);color:#7c3aed;text-transform:uppercase;letter-spacing:.04em;margin-left:8px}
+.save-bar{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center}
+.save-bar .sb-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--rm);font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--t2);transition:var(--tr);box-shadow:var(--ss)}
+.save-bar .sb-btn:hover{border-color:var(--bh);color:var(--t1);box-shadow:var(--sm)}
+.save-bar .sb-btn.primary{background:linear-gradient(135deg,#059669,#10b981);color:#fff;border-color:transparent}
+.save-bar .sb-btn.primary:hover{box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.save-bar .sb-btn i{font-size:16px}
+.save-bar .sb-info{font-size:11px;color:var(--mt);margin-left:auto}
+.save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:#fff;padding:12px 24px;border-radius:var(--rm);font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:999;opacity:0;transition:all .3s ease;display:flex;align-items:center;gap:8px}
+.save-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="hdr">
+<h1><i class="ti ti-clipboard-check"></i> Đánh Giá Prototype Playtest</h1>
+<p>Chơi game → trả lời từng câu → nhấn <b>"Chấm điểm"</b> → nhận đánh giá tự động toàn bộ tiêu chí.<br>Bản <b>Prototype</b> — tập trung visual, gameplay, logic. Không đánh giá monetization.</p>
+<div class="badges">
+<span class="badge badge-o"><i class="ti ti-flask"></i> PROTOTYPE</span>
+<span class="badge badge-p"><i class="ti ti-list-check"></i> 50 câu hỏi → 32 tiêu chí</span>
+<span class="badge badge-g"><i class="ti ti-photo"></i> Upload ảnh reference + screenshot</span>
+</div>
+</header>
+
+<div class="meta-grid">
+<div class="mf"><label>Tên Game</label><input id="m_name" value="Bus Color Sort"></div>
+<div class="mf"><label>Phiên bản</label><input id="m_ver" placeholder="0.1.0"></div>
+<div class="mf"><label>Người test</label><input id="m_who" placeholder="Tên bạn"></div>
+<div class="mf"><label>Thiết bị</label><input id="m_dev" placeholder="iPhone 15, Samsung A54..."></div>
+<div class="mf"><label>Ngày</label><input type="date" id="m_date"></div>
+</div>
+
+<div class="save-bar">
+<button class="sb-btn primary" onclick="saveState()"><i class="ti ti-device-floppy"></i> Lưu tiến độ</button>
+<button class="sb-btn" onclick="document.getElementById('load_input').click()"><i class="ti ti-upload"></i> Tải lại file đã lưu</button>
+<input type="file" id="load_input" accept=".json" style="display:none" onchange="loadState(this.files[0])">
+<button class="sb-btn" onclick="exportReportHTML()" title="Lưu báo cáo hoàn chỉnh (cần chấm điểm trước)"><i class="ti ti-file-download"></i> Lưu Báo cáo HTML</button>
+<span class="sb-info" id="save_status">Chưa lưu</span>
+</div>
+<div class="save-toast" id="toast"></div>
+
+<div class="progress-lbl"><span id="prog_lbl">0 / 49 câu đã trả lời</span><span id="prog_pct">0%</span></div>
+<div class="progress-strip"><div class="progress-fill" id="prog_bar" style="width:0%"></div></div>
+<nav class="steps" id="step_bar"></nav>
+<div id="panels"></div>
+<button class="big-btn score" onclick="doScore()"><i class="ti ti-sparkles"></i> CHẤM ĐIỂM TỰ ĐỘNG (32 tiêu chí)</button>
+<div class="result-card" id="result"></div>
+</div>
+
+<script>
+/* ── Image Store ── */
+var IMGS={ref:[],game:[]};
+function addImgs(files,slot){
+  Array.from(files).forEach(function(f){
+    if(!f.type.startsWith('image/'))return;
+    var r=new FileReader();
+    r.onload=function(e){IMGS[slot].push(e.target.result);renderGallery(slot)};
+    r.readAsDataURL(f);
+  });
+}
+function removeImg(slot,idx){IMGS[slot].splice(idx,1);renderGallery(slot)}
+function renderGallery(slot){
+  var g=document.getElementById('gal_'+slot);if(!g)return;
+  g.innerHTML=IMGS[slot].map(function(src,i){return '<div class="gallery-item"><img src="'+src+'"><button class="del" onclick="removeImg(\''+slot+'\','+i+')">&times;</button></div>'}).join('');
+}
+function handleDrop(e,slot){e.preventDefault();e.currentTarget.classList.remove('over');addImgs(e.dataTransfer.files,slot)}
+function handleOver(e){e.preventDefault();e.currentTarget.classList.add('over')}
+function handleLeave(e){e.currentTarget.classList.remove('over')}
+
+/* ── Session & Question Data ── */
+var SESSIONS=[
+{id:"s0",title:"Hình ảnh & Theme",icon:"ti-palette",time:"10 phút",
+ desc:"Upload ảnh REFERENCE (theme/art direction mong muốn) và SCREENSHOT game hiện tại. So sánh trực quan → trả lời 8 câu.",
+ hasImages:true,
+ qs:[
+  {id:"v1",text:"Color palette của game có MATCH với reference/theme mong muốn?",type:"yn3",hint:"So sánh tông màu chủ đạo, độ tương phản, mood tổng thể. Nhìn ảnh ref vs screenshot.",maps:"Bảng màu"},
+  {id:"v2",text:"Art style (flat/3D/cartoon/realistic) có ĐÚNG như reference?",type:"yn3",hint:"Phong cách vẽ: stroke, shading, perspective. Game và reference có cùng 'ngôn ngữ' visual không?",maps:"Art style"},
+  {id:"v3",text:"Element chính (fruit/block/grid/conveyor) có đúng theme mong muốn?",type:"yn3",hint:"Nhân vật/item chính có look đúng theme? Hay trông generic/placeholder?",maps:"Thành phần theme"},
+  {id:"v4",text:"Background & environment phù hợp theme?",type:"yn3",hint:"Nền level, decoration, ambiance. Có tạo được mood đúng theme?",maps:"Background"},
+  {id:"v5",text:"Icon, button, UI element có consistent style?",type:"yn3",hint:"Tất cả nút bấm, icon, panel cùng style? Hay mix nhiều style khác nhau?",maps:"Đồng bộ UI"},
+  {id:"v6",text:"Typography (font, cỡ chữ, màu chữ) phù hợp theme?",type:"yn3",hint:"Font có match art style? Đọc được rõ trên mọi background? Size hợp lý?",maps:"Typography"},
+  {id:"v7",text:"Có element nào bị LỖI visual (z-order sai, overlap, texture missing, pixel lệch)?",type:"yn3",hint:"Nhìn kỹ screenshot: item chồng lên nhau sai? Asset bị vỡ? Alignment lệch?",maps:"Hoàn thiện visual"},
+  {id:"v8",text:"Tổng thể → bạn rate visual quality so với reference?",type:"select",opts:["95%+ (gần hoàn hảo)","80–94% (rất tốt, minor gaps)","60–79% (OK nhưng thấy rõ gaps)","40–59% (nhiều khác biệt)","< 40% (khác xa reference)"],hint:"Đánh giá tổng thể. Nếu đưa 2 ảnh (ref vs game) cho người ngoài → họ thấy cùng level quality?",maps:"Chất lượng tổng thể"}
+]},
+{id:"s1",title:"Mở lần đầu",icon:"ti-eye",time:"5 phút",
+ desc:"Mở game lần đầu, KHÔNG đọc hướng dẫn trước. Quan sát tutorial, onboarding, first impression. Chơi đến Level 5.",
+ qs:[
+  {id:"q1",text:"Mở app → bao lâu đến gameplay (không tính splash)?",type:"select",opts:["< 2 giây","2–3 giây","3–5 giây","> 5 giây"],hint:"Bấm stopwatch từ lúc tap icon đến lúc thấy gameplay.",maps:"Hiệu năng"},
+  {id:"q2",text:"Level 1–3 có tutorial/hướng dẫn cách chơi không?",type:"yn",hint:"Tutorial = finger pointer, highlight, text bubble dạy cách thao tác.",maps:"Onboarding"},
+  {id:"q3",text:"Bạn hiểu cách chơi (mục tiêu + thao tác) trong bao lâu?",type:"select",opts:["< 30 giây","30–60 giây","1–2 phút","> 2 phút","Vẫn không hiểu"],hint:"Thời điểm bạn tự tin 'à, hiểu rồi'.",maps:"Onboarding"},
+  {id:"q4",text:"Mục tiêu mỗi level có rõ ràng TRƯỚC khi bắt đầu chơi?",type:"yn3",hint:"Có pre-level screen cho biết cần làm gì? Hay phải tự đoán?",maps:"Rõ ràng mục tiêu"},
+  {id:"q5",text:"App size (MB) khoảng bao nhiêu?",type:"number",unit:"MB",hint:"Settings → Apps → xem dung lượng. Hoặc check file APK/IPA.",maps:"Hiệu năng"}
+]},
+{id:"s2",title:"Gameplay & Cảm nhận",icon:"ti-hand-finger",time:"10 phút",
+ desc:"Chơi Level 5–15. Tập trung cảm nhận: tap có nhanh? animation mượt? sound hay? có 'sướng' khi clear không? Khi fail → retry ra sao?",
+ qs:[
+  {id:"q6",text:"Tap vào element → phản hồi visual có NGAY LẬP TỨC (< 0.1 giây)?",type:"yn",hint:"Nếu thấy delay giữa tap và animation → NO.",maps:"Phản hồi chạm"},
+  {id:"q7",text:"Tap 20 lần liên tục → có lần nào bị miss (tap nhưng không nhận)?",type:"yn3",hint:"Đặc biệt test ở vùng edge, gần border giữa các element.",maps:"Phản hồi chạm"},
+  {id:"q8",text:"Khi match/clear thành công → có hiệu ứng gì?",type:"multi",opts:["Screen shake","Particle/sparkle","Zoom/scale","Slow-mo","Flash/glow","Không có gì đặc biệt"],hint:"Tick TẤT CẢ hiệu ứng bạn thấy khi clear thành công.",maps:"Game feel / juice"},
+  {id:"q9",text:"Combo lớn (clear nhiều) có khác combo nhỏ (clear ít) về hiệu ứng?",type:"yn",hint:"Combo escalation: clear 3 → nhỏ, clear 6+ → hoành tráng hơn.",maps:"Game feel / juice"},
+  {id:"q10",text:"Animation mượt (60fps) hay có giật/lag?",type:"select",opts:["Rất mượt 60fps","Hầu hết mượt, đôi chỗ drop","Thấy giật rõ","Lag nhiều"],hint:"Đặc biệt quan sát khi nhiều element di chuyển cùng lúc.",maps:"Animation"},
+  {id:"q11",text:"Mỗi action (tap, place, match, clear, fail) đều có Sound Effect?",type:"select",opts:["Tất cả action có SFX","Hầu hết có (80%+)","Chỉ 1–2 action có","Không có sound"],hint:"Tắt music, chỉ nghe SFX. Ghi nhận action nào KHÔNG có sound.",maps:"Âm thanh"},
+  {id:"q12",text:"Music có bị loop rõ ràng (nghe thấy chỗ nối)?",type:"yn3",hint:"Chơi 5 phút, chú ý lúc music restart → có nghe thấy 'cắt' không?",maps:"Âm thanh"},
+  {id:"q13",text:"Có haptic/vibration khi tap hoặc match?",type:"yn",hint:"Bật vibration trong settings phone. Chơi → cảm nhận.",maps:"Haptic"},
+  {id:"q14",text:"Chơi 10 phút → rating 'sướng' tổng thể?",type:"select",opts:["Rất satisfying, muốn chơi tiếp","OK, vui","Bình thường, không ấn tượng","Nhàm/boring"],hint:"Đánh giá cảm xúc thật. 'Satisfying' = muốn clear thêm 1 level nữa.",maps:"Cảm nhận tổng thể"},
+  {id:"q15",text:"Khi fail → game nói rõ LÝ DO thua (grid đầy/hết moves/conveyor full...)?",type:"yn",hint:"Hay chỉ show 'Failed' mà không giải thích?",maps:"Trạng thái thua"},
+  {id:"q16",text:"Từ fail → chơi lại level → bao nhiêu tap?",type:"select",opts:["1 tap (retry ngay)","2 tap","3+ tap","Phải back ra menu"],hint:"Đếm số lần tap từ màn hình fail đến gameplay lại.",maps:"Trạng thái thua"},
+  {id:"q17",text:"Fail 3 lần liên tiếp → mood của bạn?",type:"select",opts:["Bình thường, muốn thử lại","Hơi frustrated nhưng OK","Khá tức, muốn nghỉ","Rất chán, muốn xóa game"],hint:"Cố tình thua 3 level liên tiếp. Đánh giá cảm xúc thật.",maps:"Trạng thái thua"}
+]},
+{id:"s3",title:"Phiên chơi & Giữ chân",icon:"ti-refresh",time:"5 phút",
+ desc:"Chơi tự nhiên đến khi TỰ MUỐN DỪNG. Kiểm tra: session bao lâu? có gì khiến bạn quay lại? progression ra sao?",
+ qs:[
+  {id:"q18",text:"Bạn chơi bao lâu từ lúc mở đến lúc TỰ MUỐN DỪNG?",type:"number",unit:"phút",hint:"Không cố chơi thêm. Note thời điểm tự nhiên muốn dừng.",maps:"Thời lượng phiên"},
+  {id:"q19",text:"Sau khi win level → có reward/feedback tạo motivation chơi tiếp (coins, unlock, animation, score)?",type:"yn3",hint:"Win xong game show gì? Chỉ 'Level Complete' text? Hay có coins, effect đặc biệt, unlock content? 'Phần nào' = có nhưng đơn giản.",maps:"Thưởng khi thắng"},
+  {id:"q20",text:"Người chơi có thấy rõ TIẾN TRÌNH của mình (level counter, map, chapter, unlock progress)?",type:"yn3",hint:"Dù là map, counter, hay chapter — user cần biết mình đang ở đâu. Hình thức không quan trọng bằng có thể hiện rõ ràng không.",maps:"Tiến trình"},
+  {id:"q21",text:"Tổng bao nhiêu levels hiện tại trong game?",type:"number",unit:"levels",hint:"Scroll level map đến cuối, hoặc chơi đến hết content.",maps:"Độ sâu nội dung"},
+  {id:"q22",text:"Có Undo / Hint / Booster nào trong game?",type:"yn",hint:"Bất kỳ tool hỗ trợ nào cho người chơi khi bị stuck.",maps:"Hệ thống trợ giúp"},
+  {id:"q23",text:"Sau khi dừng 1 tiếng → bạn có MUỐN mở lại chơi không?",type:"select",opts:["Rất muốn","Có thể","Không chắc","Không muốn"],hint:"Đánh giá thật sau khi đã ngừng chơi ≥1 tiếng. Có bị 'nghiện' không?",maps:"Cảm nhận giữ chân"},
+  {id:"qb1",text:"Core gameplay (mechanic chính, cách tương tác, mục tiêu) có ĐÚNG như brief/mô tả ban đầu?",type:"yn3",hint:"So sánh brief gốc với game thực tế: mechanic chính có match? Loop gameplay đúng? Goal mỗi level đúng mô tả? Ghi chi tiết sai lệch ở note.",maps:"Tuân thủ brief"}
+]},
+{id:"s4",title:"Logic & Kỹ thuật",icon:"ti-bug",time:"5 phút",
+ desc:"Test edge cases: pause/resume, background, boosters, win/lose boundary. Cố tìm bug.",
+ qs:[
+  {id:"q24",text:"Pause → Resume → game state đúng (không mất gì)?",type:"yn",hint:"Bấm pause giữa level → resume → mọi thứ y nguyên?",maps:"Quản lý trạng thái"},
+  {id:"q25",text:"Home button (background) → quay lại → OK?",type:"yn",hint:"Mid-level: bấm home → đợi 30s → quay lại game.",maps:"Quản lý trạng thái"},
+  {id:"q26",text:"Kill app → mở lại → progress còn?",type:"yn3",hint:"Force close mid-level → reopen. Mất level hiện tại OK, mất ALL progress = bug.",maps:"Quản lý trạng thái"},
+  {id:"q27",text:"Mỗi booster/tool → effect đúng mô tả?",type:"yn3",hint:"Dùng mỗi booster ít nhất 1 lần. Effect có đúng icon gợi ý? Ghi 'Phần nào' nếu không có booster.",maps:"Logic booster"},
+  {id:"q28",text:"Undo button hoạt động đúng?",type:"yn3",hint:"Undo → hoàn tác đúng bước trước? Undo nhiều lần OK? Ghi 'Phần nào' nếu không có undo.",maps:"Logic booster"},
+  {id:"q29",text:"Có gặp crash/freeze/stuck trong toàn bộ test?",type:"yn",hint:"Bất kỳ lúc nào game đơ, crash, hoặc stuck không thoát được.",maps:"Ổn định"},
+  {id:"q30",text:"Device có nóng lên sau 15+ phút chơi?",type:"select",opts:["Không nóng","Ấm nhẹ","Nóng rõ","Rất nóng"],hint:"Cảm nhận nhiệt device sau session dài.",maps:"Hiệu năng"},
+  {id:"q31",text:"Win condition chính xác? (Win khi đúng mục tiêu, Lose khi đúng lý do)",type:"yn",hint:"Có lần nào Win mà cảm giác chưa xong? Hoặc Lose vô lý?",maps:"Logic thắng/thua"}
+]},
+{id:"s5",title:"Level Design",icon:"ti-stairs-up",time:"10 phút",
+ desc:"Chơi thêm 10–20 levels. Quan sát: difficulty tăng đều? có mechanic mới? variety đủ?",
+ qs:[
+  {id:"q32",text:"Level 1–5 có dễ không (fail rate < 10%)?",type:"yn",hint:"Đầu game nên rất dễ để giữ user. Fail level 1–5 = tutorial thất bại.",maps:"Difficulty curve"},
+  {id:"q33",text:"Có level nào KHÓ ĐỘT NGỘT (spike) so với levels xung quanh?",type:"yn3",hint:"Đang dễ → bỗng khó gấp 3 → dễ lại = difficulty spike.",maps:"Difficulty curve"},
+  {id:"q34",text:"Có mechanic/element MỚI xuất hiện mỗi 8–15 levels?",type:"yn",hint:"Element mới: block type mới, obstacle mới, rule mới.",maps:"Nhịp mechanic mới"},
+  {id:"q35",text:"Mechanic mới có level riêng để TẬP (isolated) trước khi combine?",type:"yn",hint:"Level đầu tiên với mechanic mới → chỉ mechanic đó thôi? Hay combine ngay?",maps:"Nhịp mechanic mới"},
+  {id:"q36",text:"Chơi 20 levels liên tục → có thấy boring/lặp lại?",type:"select",opts:["Luôn thú vị, muốn chơi tiếp","OK, đôi chỗ lặp","Thấy lặp nhiều sau 15 levels","Boring sớm (< 10 levels)"],hint:"Variety = visual thay đổi + mechanic mới + surprise element.",maps:"Đa dạng"},
+  {id:"q37",text:"Có level nào bạn NGHI không thể giải (unsolvable)?",type:"yn3",hint:"Stuck > 5 phút, thử mọi cách → nghi unsolvable? Ghi level number ở note.",maps:"Khả năng giải"},
+  {id:"q38",text:"Có bị STUCK (không thua nhưng không thể win) — dead state?",type:"yn",hint:"Hết moves khả dụng nhưng game không trigger fail. Phải thoát manual.",maps:"Dead state"},
+  {id:"q39",text:"Fail rate bạn ước tính qua 20 levels?",type:"select",opts:["< 10% (quá dễ)","10–20% (hơi dễ)","20–30% (perfect)","30–40% (hơi khó)","40%+ (quá khó)"],hint:"Số level fail ÷ tổng levels chơi. Target casual puzzle: 20–30%.",maps:"Fail rate"}
+]}
+];
+
+/* ── WHY — Giải thích tại sao câu hỏi này quan trọng ── */
+var WHY={
+v1:"Tông màu quyết định cảm xúc đầu tiên. Palette sai target audience = toàn bộ visual direction cần làm lại.",
+v2:"Art style không match reference = rework toàn bộ asset. Phát hiện sớm ở prototype tiết kiệm hàng tuần art rework.",
+v3:"Element chính (fruit/block) là thứ user nhìn nhiều nhất. Thiếu theme = game mất identity, trông generic.",
+v4:"Background chiếm ~60% diện tích màn hình. BG sai mood sẽ phá hỏng toàn bộ cảm xúc dù item/block đẹp.",
+v5:"UI không đồng bộ style → game trông chưa polish, giảm perceived quality và trust từ user ngay cái nhìn đầu.",
+v6:"Font sai style hoặc quá nhỏ ảnh hưởng readability và mood. Nữ 35+ cần font dễ đọc, mềm mại, không aggressive.",
+v7:"1 bug visual nhỏ (z-order sai, texture vỡ) tạo cảm giác 'game chưa xong'. Phát hiện sớm = fix rẻ hơn rất nhiều.",
+v8:"Đánh giá tổng thể capture cảm nhận mà 7 câu riêng lẻ bỏ sót. Đây là 'gut feeling' cuối cùng về visual gap.",
+q1:"3 giây đầu quyết định first impression. Load > 5s → ~25% casual user thoát trước khi thấy gameplay.",
+q2:"Không có tutorial = user phải tự đoán cách chơi. ~70% casual user bỏ game nếu không hiểu trong 30 giây đầu.",
+q3:"Thời gian hiểu cách chơi = chất lượng onboarding. Prototype phải truyền đạt core mechanic trong < 60 giây.",
+q4:"User không biết 'cần làm gì' trước khi chơi → fail vô nghĩa → frustration sớm → churn sớm.",
+q5:"App size lớn = download chậm + tốn storage. Casual user trên device cũ sẽ skip app > 200MB.",
+q6:"Input lag > 100ms phá vỡ cảm giác 'direct manipulation'. User thấy game 'không nghe lời' → satisfaction giảm mạnh.",
+q7:"Tap không nhận = frustration #1 trên mobile. Hit area quá nhỏ hoặc conflict detection → nghiêm trọng hơn cả lag.",
+q8:"Hiệu ứng khi match/clear = 'phần thưởng tức thì' cho hành động đúng. Thiếu hiệu ứng = game thiếu 'soul'.",
+q9:"Combo escalation tạo feedback loop: chơi giỏi → effect lớn → reward → muốn tiếp. Thiếu = trải nghiệm phẳng.",
+q10:"Giật/lag phá hỏng mọi game feel. User không phân biệt 'game lag' vs 'phone yếu' — luôn đổ lỗi cho game.",
+q11:"Mỗi action cần audio feedback để cảm giác 'alive'. Tap không có tiếng = 'dead'. 80%+ SFX coverage là minimum.",
+q12:"Music loop ngắn + nghe rõ chỗ nối = annoying sau 10 phút. Casual user chơi nhiều session → nghe lặp liên tục.",
+q13:"Haptic tăng satisfaction ~15-20% (Apple HIG). Nữ 35+ thường bật vibration — cơ hội tăng feel gần như miễn phí.",
+q14:"Tổng kết cảm xúc trực tiếp — không tính được bằng công thức. 'Sướng hay không' là KPI cuối cùng của game feel.",
+q15:"User cần biết TẠI SAO thua để cải thiện. Chỉ hiện 'Failed' = learned helplessness → không biết sửa gì → bỏ game.",
+q16:"Mỗi tap thừa từ fail → retry = friction. Trong 2-3 tap đó, user kịp quyết định 'thôi không chơi nữa'.",
+q17:"Fail là unavoidable trong puzzle. Cảm xúc SAU fail quyết định giữ hay mất user: 'thử lại' vs 'bỏ cuộc'.",
+q18:"Session 5-10 phút = sweet spot casual mobile. < 3 phút = quá shallow. > 15 phút = quá demanding cho casual.",
+q19:"Win reward (coins, unlock, animation) tạo dopamine loop. Chỉ hiện 'Level Complete' text = thiếu hook. Bất kỳ hình thức reward nào đều tốt hơn binary win/lose.",
+q20:"Progression visibility giữ user engage. Dù map, counter, hay chapter — user cần biết mình đi tới đâu. Không thấy tiến trình = không có sense of achievement.",
+q21:"Content depth phản ánh prototype maturity. < 20 levels khó đánh giá curve. ≥ 60 = sẵn sàng test sâu hơn.",
+q22:"Booster/hint = safety net khi stuck. Casual user CẦN được 'cứu' — không có booster → hard stuck → quit.",
+q23:"Proxy trực tiếp cho Day-1 retention. 'Muốn mở lại sau 1 tiếng' = tín hiệu mạnh nhất cho engagement.",
+qb1:"Câu quan trọng nhất cho Brief Compliance. Core mechanic không đúng brief = sai hướng từ đầu, mọi polish khác đều vô nghĩa.",
+q24:"State management cơ bản. Mất state khi pause = mất trust. User sẽ sợ rời game → session bị 'giam cầm'.",
+q25:"90%+ mobile session bị interrupt (noti, call). Mất state khi background = mất progress → frustration cực lớn.",
+q26:"Test persistence layer. Mất ALL progress = critical bug P0. Mất level hiện tại = chấp nhận được ở prototype.",
+q27:"Booster effect sai = P0 bug. User nhìn icon → expect kết quả → không đúng = broken trust + waste resource.",
+q28:"Undo sai nguy hiểm hơn không có undo. User tin tưởng → dùng → sai → mất level = cực kỳ frustrating.",
+q29:"Crash = worst UX. 1 crash → uninstall rate tăng ~2x. Critical hơn mọi feature request hay visual polish.",
+q30:"Phone nóng = battery drain + performance giảm dần. Casual user chơi khi nằm/đi tàu — phone nóng = khó chịu vật lý.",
+q31:"Win condition sai = phá vỡ core loop. Win mà thấy chưa xong, hoặc lose vô lý → user mất trust hoàn toàn.",
+q32:"Level đầu = hook. User PHẢI thấy 'mình giỏi' ở 5 level đầu. Fail sớm = churn sớm. Target: < 5% fail rate.",
+q33:"Difficulty spike = đang flow bỗng bị wall. 1 spike sai chỗ → 30-40% user quit TẠI ĐÓ. Curve cần smooth.",
+q34:"Mechanic mới mỗi 8-15 levels giữ freshness. Không có = boring nhanh. Quá dày = overwhelm user.",
+q35:"Mechanic mới cần 1-2 level 'tập' riêng trước khi combine. Ném mechanic mới + level khó cùng lúc = double frustration.",
+q36:"Đo trực tiếp cảm giác lặp. 20 levels ≈ 1 session thật. Boring trước level 15 = content thiếu variety nghiêm trọng.",
+q37:"Level unsolvable = P0 bug. User stuck 5+ phút + nghi không giải được = rage quit + negative review.",
+q38:"Dead state (hết move, game không trigger fail) = stuck vĩnh viễn. Tệ hơn lose vì user phải force-quit.",
+q39:"20-30% fail rate = sweet spot casual puzzle. < 10% = boring. > 40% = churn. Fail rate sai = vấn đề core design."
+};
+
+/* ── Answer Store ── */
+var A={};
+var TOTAL_QS=50;
+
+function ans(id,v){A[id]=v;updateProgress();markCard(id);}
+function ansMulti(id,val){
+  if(!A[id])A[id]=[];
+  var i=A[id].indexOf(val);
+  if(i>=0)A[id].splice(i,1);else A[id].push(val);
+  updateProgress();markCard(id);
+}
+function markCard(id){
+  var c=document.getElementById('qc_'+id);
+  if(c){var v=A[id];c.classList.toggle('answered',v!==undefined&&v!==''&&!(Array.isArray(v)&&v.length===0));}
+}
+function countDone(){
+  var done=0;
+  SESSIONS.forEach(function(s){s.qs.forEach(function(q){
+    var v=A[q.id];if(v!==undefined&&v!==''&&!(Array.isArray(v)&&v.length===0))done++;
+  })});
+  return done;
+}
+function updateProgress(){
+  var done=countDone();
+  document.getElementById('prog_lbl').textContent=done+' / '+TOTAL_QS+' câu đã trả lời';
+  var pct=Math.round(done/TOTAL_QS*100);
+  document.getElementById('prog_pct').textContent=pct+'%';
+  document.getElementById('prog_bar').style.width=pct+'%';
+  SESSIONS.forEach(function(s,si){
+    var sd=0;s.qs.forEach(function(q){var v=A[q.id];if(v!==undefined&&v!==''&&!(Array.isArray(v)&&v.length===0))sd++;});
+    var tab=document.getElementById('stab_'+si);
+    if(tab)tab.classList.toggle('filled',sd===s.qs.length);
+  });
+}
+function switchStep(n){
+  SESSIONS.forEach(function(_,i){
+    document.getElementById('sp_'+i).classList.toggle('active',i===n);
+    document.getElementById('stab_'+i).classList.toggle('active',i===n);
+  });
+}
+
+/* ── Render Sessions ── */
+var sb=document.getElementById('step_bar'),pp=document.getElementById('panels');
+SESSIONS.forEach(function(s,si){
+  sb.innerHTML+='<div class="step-tab'+(si===0?' active':'')+'" id="stab_'+si+'" onclick="switchStep('+si+')"><i class="ti '+s.icon+'"></i> '+s.title+'<span class="dot"></span></div>';
+  var h='<div class="panel'+(si===0?' active':'')+'" id="sp_'+si+'"><div class="session-intro"><b>Session '+(si+1)+': '+s.title+'</b> ('+s.time+')<br>'+s.desc+'</div>';
+
+  if(s.hasImages){
+    h+='<div class="compare-wrap">';
+    h+='<div class="compare-col"><h4><i class="ti ti-target-arrow" style="color:var(--pp)"></i> REFERENCE (Theme mong muốn)</h4>';
+    h+='<div class="drop-zone" ondrop="handleDrop(event,\'ref\')" ondragover="handleOver(event)" ondragleave="handleLeave(event)"><input type="file" accept="image/*" multiple onchange="addImgs(this.files,\'ref\')"><i class="ti ti-cloud-upload"></i><p>Kéo thả hoặc click</p><span>PNG, JPG — không giới hạn số ảnh</span></div>';
+    h+='<div class="gallery" id="gal_ref"></div></div>';
+    h+='<div class="compare-col"><h4><i class="ti ti-device-mobile" style="color:var(--br)"></i> SCREENSHOT Game hiện tại</h4>';
+    h+='<div class="drop-zone" ondrop="handleDrop(event,\'game\')" ondragover="handleOver(event)" ondragleave="handleLeave(event)"><input type="file" accept="image/*" multiple onchange="addImgs(this.files,\'game\')"><i class="ti ti-cloud-upload"></i><p>Kéo thả hoặc click</p><span>Screenshot gameplay, UI, menu</span></div>';
+    h+='<div class="gallery" id="gal_game"></div></div>';
+    h+='</div>';
+    h+='<div class="ai-box" id="ai_assessment"><div class="ai-badge"><i class="ti ti-sparkles"></i> Đánh giá AI —từ 12 screenshots</div>';
+    h+='<h3>Đánh giá Visual & Art — Reference: Bus Color Trip (Voodoo Hypercasual)</h3>';
+    h+='<div class="score-row">';
+    h+='<div class="sc-pill" style="background:var(--go-l);border-color:#a7f3d0;color:var(--go-d)"><b>3.5 / 4</b>Art Style</div>';
+    h+='<div class="sc-pill" style="background:var(--go-l);border-color:#a7f3d0;color:var(--go-d)"><b>3.5 / 4</b>Background</div>';
+    h+='<div class="sc-pill" style="background:var(--go-l);border-color:#a7f3d0;color:var(--go-d)"><b>3.5 / 4</b>UI/UX</div>';
+    h+='<div class="sc-pill" style="background:var(--go-l);border-color:#a7f3d0;color:var(--go-d)"><b>84 / 100</b>Visual Total</div>';
+    h+='</div>';
+    h+='<ul class="findings">';
+    h+='<li><span class="tag-ok">✓ Tốt:</span> 3D cartoon isometric nhất quán — bus rounded, ball clusters mượt, stickmen cute có badge count + shadow. Lighting tốt</li>';
+    h+='<li><span class="tag-ok">✓ Tốt:</span> BG thay đổi theo level range (xanh dương L2-10 → hồng L20 → kem/cây xanh L30 → hồng L50) — tạo freshness</li>';
+    h+='<li><span class="tag-ok">✓ Tốt:</span> UI consistent: top bar, booster slots (lock state rõ Lv.6/12/16), bus counter "0/5", popup đồng bộ. "New Feature Unlocked" polished</li>';
+    h+='<li><span class="tag-ok">✓ Tốt:</span> Color-coding rõ ràng cho sorting — mỗi màu dễ phân biệt. "???" blocks cho locked content = mystery/curiosity hook</li>';
+    h+='<li><span class="tag-wr">⚠ Minor:</span> Dev buttons (SHOW CHEAT, ON/OFF UI) hiện trong gameplay — cần ẩn trước khi gửi review/release</li>';
+    h+='<li><span class="tag-wr">⚠ Minor:</span> "Level Complete" hơi basic (trophy + coins). Thiếu star rating, confetti chi tiết, celebration effect</li>';
+    h+='<li><span class="tag-wr">⚠ Minor:</span> "Hold to view the board" text trên fail popup nhỏ, dễ miss. "ARE YOU SURE → Give up" flow hơi negative</li>';
+    h+='</ul>';
+    h+='<div class="reco"><b>Nhận xét:</b> Visual đạt 80-94% chuẩn Bus Color Trip/Voodoo. Art polished, UI clean, BG variety ấn tượng cho prototype.<br><b>3 việc cần làm:</b> 1) Ẩn dev buttons 2) Improve Level Complete screen (thêm stars/confetti) 3) Review fail UX wording</div>';
+    h+='</div>';
+  }
+
+  s.qs.forEach(function(q){
+    h+='<div class="qcard" id="qc_'+q.id+'"><div class="q-id"><i class="ti ti-help-circle"></i> '+q.id.toUpperCase()+' <span class="q-maps">→ '+q.maps+'</span></div><div class="q-text">'+q.text+'</div>'+(WHY[q.id]?'<div class="q-why"><i class="ti ti-bulb"></i> <span>'+WHY[q.id]+'</span></div>':'')+'<div class="q-hint">'+q.hint+'</div>';
+    if(q.type==='yn'){
+      h+='<div class="yn-row"><button class="yn-btn" onclick="ans(\''+q.id+'\',\'yes\');ynHL(this)">CÓ</button><button class="yn-btn" onclick="ans(\''+q.id+'\',\'no\');ynHL(this)">KHÔNG</button></div>';
+    }else if(q.type==='yn3'){
+      h+='<div class="yn-row"><button class="yn-btn" onclick="ans(\''+q.id+'\',\'yes\');ynHL(this)">CÓ</button><button class="yn-btn" onclick="ans(\''+q.id+'\',\'partial\');ynHL(this)">PHẦN NÀO</button><button class="yn-btn" onclick="ans(\''+q.id+'\',\'no\');ynHL(this)">KHÔNG</button></div>';
+    }else if(q.type==='select'){
+      h+='<div class="sel-row">';q.opts.forEach(function(o,oi){h+='<button class="sel-btn" onclick="ans(\''+q.id+'\','+oi+');selHL(this)">'+o+'</button>';});h+='</div>';
+    }else if(q.type==='multi'){
+      h+='<div class="sel-row">';q.opts.forEach(function(o){h+='<button class="sel-btn" onclick="ansMulti(\''+q.id+'\',\''+o.replace(/'/g,"\\'")+'\');this.classList.toggle(\'sel\')">'+o+'</button>';});h+='</div>';
+    }else if(q.type==='number'){
+      h+='<div class="num-row"><input type="number" onchange="ans(\''+q.id+'\',+this.value)" placeholder="0"><span>'+q.unit+'</span></div>';
+    }else if(q.type==='text'){
+      h+='<input class="q-note" onchange="ans(\''+q.id+'\',this.value)" placeholder="Ghi nhận...">';
+    }
+    h+='<textarea class="q-note" placeholder="Ghi chú thêm (tùy chọn)..." onchange="A[\''+q.id+'_note\']=this.value"></textarea></div>';
+  });
+  h+='</div>';
+  pp.innerHTML+=h;
+});
+
+function ynHL(el){
+  el.parentElement.querySelectorAll('.yn-btn').forEach(function(b){b.className='yn-btn'});
+  var t=el.textContent.trim();
+  el.classList.add(t==='CÓ'?'sel-y':t==='KHÔNG'?'sel-n':'sel-p');
+}
+function selHL(el){
+  el.parentElement.querySelectorAll('.sel-btn').forEach(function(b){b.classList.remove('sel')});
+  el.classList.add('sel');
+}
+document.getElementById('m_date').value=new Date().toISOString().slice(0,10);
+
+/* ── Scoring Engine ── */
+function yn2sc(v,yesVal,partVal,noVal){return v==='yes'?(yesVal||4):v==='partial'?(partVal||2):(noVal||0)}
+
+function doScore(){
+  var SC={};
+
+  /* P1: Visual & Theme (20%) — 6 criteria from 8 questions */
+  SC.theme_palette=Math.round((yn2sc(A.v1,4,2,0)+yn2sc(A.v4,4,2,0))/2);
+  SC.theme_style=Math.round((yn2sc(A.v2,4,2,0)+yn2sc(A.v3,4,2,0))/2);
+  SC.theme_ui=Math.round((yn2sc(A.v5,4,2,0)+yn2sc(A.v6,4,2,0))/2);
+  SC.theme_quality=(A.v8===0?4:A.v8===1?3:A.v8===2?2:A.v8===3?1:0);
+  SC.theme_polish=yn2sc(A.v7,0,2,4);
+  SC.theme_anim=(A.q10===0?4:A.q10===1?3:A.q10===2?2:A.q10===3?1:2);
+
+  /* P2: Brief Compliance (15%) — 4 criteria */
+  SC.brief_core=yn2sc(A.qb1,4,2,0);
+  var bF=0;if(A.q19==='yes')bF++;else if(A.q19==='partial')bF+=0.5;if(A.q20==='yes')bF++;else if(A.q20==='partial')bF+=0.5;if(A.q22==='yes')bF++;
+  SC.brief_features=(bF>=3?4:bF>=2?3:bF>=1?2:1);
+  var lv=A.q21||0;SC.brief_content=(lv>=80?4:lv>=60?3:lv>=40?2:lv>=20?1:0);
+  SC.brief_audience=(function(){var s14=(A.q14===0?4:A.q14===1?3:A.q14===2?2:A.q14===3?0:2);var s23=(A.q23===0?4:A.q23===1?3:A.q23===2?1:A.q23===3?0:2);return Math.round((s14+s23)/2)})();
+
+  /* P3: Game Feel (25%) — 6 criteria */
+  SC.feel_touch=(function(){var b=3;if(A.q6==='no')b=1;if(A.q7==='yes')b=Math.max(b-1,0);if(A.q7==='no')b=Math.min(b+1,4);return b})();
+  var sndMap=[4,3,2,0];SC.feel_sound=(A.q11!==undefined?sndMap[A.q11]:2);if(A.q12==='yes')SC.feel_sound=Math.max(SC.feel_sound-1,0);
+  SC.feel_juice=(function(){var fx=A.q8||[];var b=Math.min(fx.length,4);if(fx.indexOf('Không có gì đặc biệt')>=0)b=0;if(A.q9==='yes')b=Math.min(b+1,4);if(A.q14===0)b=4;else if(A.q14===1)b=Math.max(b,3);return Math.min(b,4)})();
+  SC.feel_haptic=(A.q13==='yes'?3:1);
+  SC.feel_camera=(A.q10===0?4:A.q10===1?3:A.q10===2?2:A.q10===3?1:3);
+  var fp=0;if(A.q15==='yes')fp+=2;if(A.q16===0)fp+=2;else if(A.q16===1)fp+=1;if(A.q17===0)fp+=1;
+  SC.feel_fail=Math.min(fp,4);
+
+  /* P4: Properties (10%) — 5 criteria */
+  SC.prop_session=(function(){var m=A.q18||0;if(m>=5&&m<=10)return 4;if(m>=4&&m<=12)return 3;if(m<3||m>15)return 1;return 2})();
+  SC.prop_onboard=(function(){if(A.q2==='no')return 0;if(A.q3===0)return 4;if(A.q3===1)return 3;if(A.q3===2)return 2;if(A.q3===3||A.q3===4)return 1;return 2})();
+  SC.prop_replay=(A.q19==='yes'?3:A.q19==='partial'?2:1);
+  SC.prop_objective=yn2sc(A.q4,3,2,1);
+  SC.prop_progress=(function(){var p=0;if(A.q20==='yes')p+=2;else if(A.q20==='partial')p+=1;if(A.q19==='yes')p++;else if(A.q19==='partial')p+=0.5;p++;return Math.min(Math.round(p),4)})();
+
+  /* P5: Logic (15%) — 6 criteria */
+  SC.logic_stability=(A.q29==='yes'?0:A.q29==='no'?4:2);
+  SC.logic_winlose=(A.q31==='yes'?4:2);
+  SC.logic_booster=(function(){var ok=true;if(A.q27==='no')ok=false;if(A.q28==='no')ok=false;var na=(A.q27==='partial'&&A.q28==='partial');if(na)return 3;return ok?3:1})();
+  SC.logic_state=(function(){var p=0;if(A.q24==='yes')p++;if(A.q25==='yes')p++;if(A.q26==='yes')p+=2;else if(A.q26==='partial')p++;return Math.min(p,4)})();
+  SC.logic_analytics=(function(){var p=2;if(A.q29==='no')p++;if(A.q30<=1)p++;else if(A.q30>=2)p--;if(A.q1<=1)p=Math.min(p+1,4);return Math.max(Math.min(p,4),0)})();
+  var perf=3;if(A.q1===3)perf=1;else if(A.q1===2)perf=2;else if(A.q1===0)perf=4;
+  if(A.q30>=2)perf=Math.max(perf-1,0);
+  var sz=A.q5||0;if(sz>200)perf=Math.max(perf-1,0);
+  SC.logic_perf=Math.min(perf,4);
+
+  /* P6: Level Design (15%) — 5 criteria */
+  SC.level_curve=(function(){var p=3;if(A.q32==='no')p--;if(A.q33==='yes')p-=2;else if(A.q33==='partial')p--;return Math.max(p,0)})();
+  SC.level_pacing=(function(){var p=2;if(A.q34==='yes')p++;if(A.q35==='yes')p++;return Math.min(p,4)})();
+  SC.level_failrate=(A.q39===2?4:A.q39===1||A.q39===3?3:A.q39===0?2:A.q39===4?1:2);
+  SC.level_variety=(A.q36===0?4:A.q36===1?3:A.q36===2?2:1);
+  SC.level_solve=(function(){var p=4;if(A.q37==='yes')p-=2;else if(A.q37==='partial')p--;if(A.q38==='yes')p-=2;return Math.max(p,0)})();
+
+  /* ── Pillar Aggregation ── */
+  var PILLARS=[
+    {title:"🎨 Hình ảnh & Theme",w:20,items:[{k:"theme_palette",n:"Màu sắc & Background"},{k:"theme_style",n:"Art style & Thành phần"},{k:"theme_ui",n:"Đồng bộ UI"},{k:"theme_quality",n:"Khớp tổng thể"},{k:"theme_polish",n:"Hoàn thiện visual"},{k:"theme_anim",n:"Chất lượng animation"}]},
+    {title:"📋 Tuân thủ Brief",w:15,items:[{k:"brief_core",n:"Core mechanic"},{k:"brief_features",n:"Bộ tính năng"},{k:"brief_content",n:"Số lượng level"},{k:"brief_audience",n:"Phù hợp đối tượng"}]},
+    {title:"🤌 Cảm nhận Game",w:25,items:[{k:"feel_touch",n:"Phản hồi chạm"},{k:"feel_sound",n:"Âm thanh"},{k:"feel_juice",n:"Juice / sự thỏa mãn"},{k:"feel_haptic",n:"Haptic"},{k:"feel_camera",n:"Camera"},{k:"feel_fail",n:"Thua / thử lại"}]},
+    {title:"🧬 Tính chất",w:10,items:[{k:"prop_session",n:"Thời lượng phiên"},{k:"prop_onboard",n:"Onboarding"},{k:"prop_replay",n:"Giá trị chơi lại"},{k:"prop_objective",n:"Rõ ràng mục tiêu"},{k:"prop_progress",n:"Tiến trình"}]},
+    {title:"🔧 Logic & Kỹ thuật",w:15,items:[{k:"logic_stability",n:"Ổn định"},{k:"logic_winlose",n:"Thắng/Thua"},{k:"logic_booster",n:"Boosters"},{k:"logic_state",n:"Quản lý state"},{k:"logic_analytics",n:"Analytics"},{k:"logic_perf",n:"Hiệu năng"}]},
+    {title:"📐 Level Design",w:15,items:[{k:"level_curve",n:"Difficulty curve"},{k:"level_pacing",n:"Nhịp mechanic"},{k:"level_failrate",n:"Fail rate"},{k:"level_variety",n:"Đa dạng"},{k:"level_solve",n:"Khả năng giải"}]}
+  ];
+
+  var total=0,catData=[];
+  PILLARS.forEach(function(p){
+    var max=p.items.length*4;
+    var got=p.items.reduce(function(a,it){return a+(SC[it.k]||0)},0);
+    var pct=max>0?got/max:0;
+    catData.push({title:p.title,w:p.w,pct:pct,got:got,max:max,items:p.items.map(function(it){return{n:it.n,k:it.k,s:SC[it.k]||0}})});
+    total+=pct*p.w;
+  });
+  total=Math.round(total);
+
+  /* ── Render Report ── */
+  var clr=total>=75?'var(--go)':total>=55?'var(--cd)':'var(--st)';
+  var h='';
+
+  // Screenshot gallery in report
+  if(IMGS.ref.length||IMGS.game.length){
+    h+='<div class="compare-wrap" style="margin-bottom:1.5rem">';
+    if(IMGS.ref.length){h+='<div class="compare-col"><h4><i class="ti ti-target-arrow" style="color:var(--pp)"></i> Reference</h4><div class="gallery">';IMGS.ref.forEach(function(s){h+='<div class="gallery-item"><img src="'+s+'"></div>'});h+='</div></div>';}
+    if(IMGS.game.length){h+='<div class="compare-col"><h4><i class="ti ti-device-mobile" style="color:var(--br)"></i> Game</h4><div class="gallery">';IMGS.game.forEach(function(s){h+='<div class="gallery-item"><img src="'+s+'"></div>'});h+='</div></div>';}
+    h+='</div>';
+  }
+
+  h+='<div class="big-score-wrap"><div><div style="font-size:12px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Điểm Chất Lượng Prototype</div><div class="big-score" style="color:'+clr+'">'+total+'</div></div><div style="font-size:12px;color:var(--t2);text-align:right;line-height:1.6">Tối đa 100<br><b style="color:var(--go)">ĐẠT ≥75</b> | <b style="color:var(--cd)">CẢI THIỆN 55–74</b> | <b style="color:var(--st)">LÀM LẠI &lt;55</b></div></div>';
+  h+='<div class="pbar-wrap"><div class="pbar" style="width:'+total+'%;background:'+clr+'"></div></div>';
+
+  h+='<div style="font-size:14px;font-weight:700;margin-bottom:12px"><i class="ti ti-chart-radar" style="color:var(--br)"></i> Phân rã 6 trụ:</div>';
+  catData.forEach(function(c){
+    var pp=Math.round(c.pct*100);var cl=pp>=75?'var(--go)':pp>=50?'var(--cd)':'var(--st)';
+    h+='<div class="radar-row"><div class="radar-lbl">'+c.title+' ('+c.w+'%)</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:'+pp+'%;background:'+cl+'"></div></div><div class="radar-val" style="color:'+cl+'">'+pp+'%</div></div>';
+  });
+
+  // MUST-HAVE check
+  var mustList=[
+    ['theme_quality','Khớp visual tổng thể','must'],
+    ['theme_polish','Hoàn thiện visual','must'],
+    ['brief_core','Core mechanic','must'],
+    ['feel_touch','Phản hồi chạm','must'],
+    ['feel_sound','Âm thanh','must'],
+    ['feel_juice','Juice/sự thỏa mãn','must'],
+    ['feel_fail','Thua/thử lại','must'],
+    ['prop_onboard','Onboarding','must'],
+    ['prop_objective','Rõ ràng mục tiêu','must'],
+    ['logic_stability','Ổn định','must'],
+    ['logic_winlose','Thắng/Thua','must'],
+    ['logic_state','Quản lý state','must'],
+    ['level_curve','Difficulty curve','must'],
+    ['level_solve','Khả năng giải','must']
+  ];
+  var mustFail=[];
+  mustList.forEach(function(m){if((SC[m[0]]||0)<=1)mustFail.push(m[1]+' ('+SC[m[0]]+'/4)')});
+
+  if(mustFail.length>0){
+    h+='<div style="background:var(--st-l);border:1px solid #fee2e2;padding:14px 18px;border-radius:var(--rm);margin:1rem 0"><div style="font-size:13px;font-weight:700;color:var(--st-d);margin-bottom:8px"><i class="ti ti-alert-octagon"></i> '+mustFail.length+' BẮT BUỘC ≤1 điểm — CẦN FIX:</div>'+mustFail.map(function(m){return '<div style="padding:3px 0;font-size:12.5px;color:var(--st-d)"><i class="ti ti-circle-x"></i> '+m+'</div>'}).join('')+'</div>';
+  }else{
+    h+='<div style="background:var(--go-l);border:1px solid #a7f3d0;padding:12px 16px;border-radius:var(--rm);margin:1rem 0;font-size:13px;font-weight:600;color:var(--go-d)"><i class="ti ti-circle-check"></i> Tất cả BẮT BUỘC ≥2 điểm.</div>';
+  }
+
+  // Verdict
+  if(mustFail.length>0){h+='<div class="verdict vst"><i class="ti ti-alert-octagon"></i> <b>CHƯA ĐẠT</b> — '+mustFail.length+' tiêu chí bắt buộc cần fix trước khi tiếp tục.</div>';}
+  else if(total>=75){h+='<div class="verdict vgo"><i class="ti ti-rocket"></i> <b>PROTOTYPE ĐẠT ('+total+'/100)</b> — Đủ chất lượng chuyển sang phase tiếp theo.</div>';}
+  else if(total>=55){h+='<div class="verdict vcd"><i class="ti ti-alert-triangle"></i> <b>CẦN CẢI THIỆN ('+total+'/100)</b> — Nâng các mục dưới 50% trước khi tiếp tục.</div>';}
+  else{h+='<div class="verdict vst"><i class="ti ti-circle-x"></i> <b>CẦN LÀM LẠI NHIỀU ('+total+'/100)</b> — Xem chi tiết bên dưới.</div>';}
+
+  // Detail table
+  h+='<div style="font-size:14px;font-weight:700;margin-top:1.5rem"><i class="ti ti-list-details" style="color:var(--br)"></i> Chi tiết 32 tiêu chí:</div>';
+  h+='<table class="detail-table"><tr><th>Trụ</th><th>Tiêu chí</th><th>Điểm</th></tr>';
+  catData.forEach(function(c){
+    c.items.forEach(function(it,i){
+      var cl=it.s>=3?'var(--go)':it.s>=2?'var(--cd)':'var(--st)';
+      h+='<tr><td style="font-weight:'+(i===0?'700':'400')+'">'+(i===0?c.title:'')+'</td><td>'+it.n+'</td><td class="sc" style="color:'+cl+'">'+it.s+'/4</td></tr>';
+    });
+  });
+  h+='</table>';
+
+  // Auto-detected issues
+  h+='<div style="font-size:14px;font-weight:700;margin-top:1.5rem"><i class="ti ti-alert-circle" style="color:var(--st)"></i> Vấn đề tự động phát hiện:</div><div class="issue-grid">';
+  if(A.q2==='no')h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Không có tutorial — user mới sẽ không hiểu cách chơi.</div>';
+  if(A.q4==='no')h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Mục tiêu level không rõ ràng — cần pre-level screen.</div>';
+  if(A.q29==='yes')h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Có crash/freeze — fix trước mọi thứ khác.</div>';
+  if(A.q38==='yes')h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Dead state detected — level design cần fix.</div>';
+  if(A.q6==='no')h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Input lag — touch response cần optimize.</div>';
+  if(A.q14===3)h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Game boring — cần juice, game feel, variety.</div>';
+  if(A.v7==='yes')h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Lỗi visual (z-order, overlap, texture) — cần polish assets.</div>';
+  if(A.v8>=3)h+='<div class="issue-card wr"><b>Cảnh báo:</b> Visual quality gap lớn so với reference — cần cải thiện art.</div>';
+  if(A.q33==='yes')h+='<div class="issue-card wr"><b>Cảnh báo:</b> Difficulty spike — smooth lại difficulty curve.</div>';
+  if(A.q19==='no')h+='<div class="issue-card wr"><b>Cảnh báo:</b> Win không có reward/feedback — thiếu motivation chơi tiếp.</div>';
+  if(A.qb1==='no')h+='<div class="issue-card cr"><b>NGHIÊM TRỌNG:</b> Core gameplay KHÔNG đúng brief — cần review lại direction với đối tác.</div>';
+  if(A.qb1==='partial')h+='<div class="issue-card wr"><b>Cảnh báo:</b> Core gameplay chỉ đúng một phần brief — cần align lại scope.</div>';
+  if(A.q23>=2)h+='<div class="issue-card wr"><b>Cảnh báo:</b> Retention feel thấp — user không muốn quay lại chơi.</div>';
+  if(SC.theme_quality>=3)h+='<div class="issue-card ok"><b>Tốt:</b> Visual match reference rất sát.</div>';
+  if(SC.feel_touch>=3)h+='<div class="issue-card ok"><b>Tốt:</b> Touch response nhanh.</div>';
+  if(A.q29==='no')h+='<div class="issue-card ok"><b>Tốt:</b> Không crash trong toàn bộ test.</div>';
+  if(SC.feel_juice>=3)h+='<div class="issue-card ok"><b>Tốt:</b> Game feel / juice tốt.</div>';
+  h+='</div>';
+
+  // Retention indicator
+  h+='<div style="font-size:14px;font-weight:700;margin-top:1.5rem;margin-bottom:8px"><i class="ti ti-heart" style="color:var(--st)"></i> Chỉ số giữ chân:</div>';
+  var retScore=0;
+  if(A.q23===0)retScore+=3;else if(A.q23===1)retScore+=2;else if(A.q23===2)retScore+=1;
+  if(A.q14===0)retScore+=2;else if(A.q14===1)retScore+=1;
+  if(A.q19!=='no'&&A.q19!==undefined)retScore++;
+  var retClr=retScore>=4?'var(--go)':retScore>=2?'var(--cd)':'var(--st)';
+  var retLbl=retScore>=4?'Cao — user muốn quay lại':retScore>=2?'Trung bình — cần thêm hooks':'Thấp — risk churn cao';
+  h+='<div style="padding:12px 16px;border-radius:var(--rm);border-left:4px solid '+retClr+';background:#f8fafc;border:1px solid var(--bd);margin-bottom:1rem"><span style="font-weight:700;color:'+retClr+'">'+retScore+'/6</span> <span style="font-size:13px;color:var(--t2)"> — '+retLbl+'</span></div>';
+
+  h+='<textarea class="note-area" placeholder="Kết luận tổng thể từ reviewer..."></textarea>';
+  h+='<button class="big-btn export" onclick="exportTxt()"><i class="ti ti-download"></i> Xuất báo cáo văn bản</button>';
+
+  var rc=document.getElementById('result');
+  rc.innerHTML=h;rc.className='result-card show';
+  rc.scrollIntoView({behavior:'smooth'});
+  window._SC=SC;window._catData=catData;window._total=total;
+}
+
+/* ── Export ── */
+function exportTxt(){
+  var l=['════════════════════════════════════════','  BÁO CÁO ĐÁNH GIÁ PROTOTYPE PLAYTEST','════════════════════════════════════════','','Tên game: '+(document.getElementById('m_name').value||''),'Phiên bản: '+(document.getElementById('m_ver').value||''),'Người test: '+(document.getElementById('m_who').value||''),'Thiết bị: '+(document.getElementById('m_dev').value||''),'Ngày: '+(document.getElementById('m_date').value||''),'Ảnh reference: '+IMGS.ref.length+' | Screenshot game: '+IMGS.game.length,'','─── ĐIỂM TỔNG: '+(window._total||0)+' / 100 ───',''];
+  (window._catData||[]).forEach(function(c){
+    l.push('▸ '+c.title+' (weight '+c.w+'%) = '+Math.round(c.pct*100)+'%  ['+c.got+'/'+c.max+']');
+    c.items.forEach(function(it){l.push('    ['+it.s+'/4] '+it.n)});l.push('');
+  });
+  l.push('─── CÂU TRẢ LỜI ───');
+  SESSIONS.forEach(function(s){s.qs.forEach(function(q){
+    var v=A[q.id];var note=A[q.id+'_note'];
+    l.push(q.id.toUpperCase()+': '+JSON.stringify(v===undefined?'':v)+(note?' // '+note:''));
+  })});
+  var blob=new Blob([l.join('\n')],{type:'text/plain'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='Prototype_Playtest_'+(document.getElementById('m_name').value||'game').replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.txt';
+  a.click();
+}
+
+/* ── Toast ── */
+function showToast(msg,icon){
+  var t=document.getElementById('toast');
+  t.innerHTML='<i class="ti '+(icon||'ti-check')+'" style="font-size:16px"></i> '+msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2500);
+}
+
+/* ── Save State → JSON ── */
+function saveState(){
+  var meta={
+    name:document.getElementById('m_name').value,
+    ver:document.getElementById('m_ver').value,
+    who:document.getElementById('m_who').value,
+    dev:document.getElementById('m_dev').value,
+    date:document.getElementById('m_date').value
+  };
+  var data={v:2,meta:meta,answers:A,imgs:IMGS,savedAt:new Date().toISOString()};
+  var json=JSON.stringify(data,null,2);
+  var blob=new Blob([json],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Playtest_'+(meta.name||'game').replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  document.getElementById('save_status').textContent='Đã lưu lúc '+new Date().toLocaleTimeString('vi-VN');
+  showToast('Đã lưu thành công!','ti-check');
+}
+
+/* ── Load State ← JSON ── */
+function loadState(file){
+  if(!file)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      if(data.meta){
+        document.getElementById('m_name').value=data.meta.name||'';
+        document.getElementById('m_ver').value=data.meta.ver||'';
+        document.getElementById('m_who').value=data.meta.who||'';
+        document.getElementById('m_dev').value=data.meta.dev||'';
+        document.getElementById('m_date').value=data.meta.date||'';
+      }
+      if(data.answers){for(var k in data.answers)A[k]=data.answers[k];}
+      if(data.imgs){IMGS=data.imgs;renderGallery('ref');renderGallery('game');}
+      restoreUI();
+      updateProgress();
+      document.getElementById('save_status').textContent='Đã tải: '+(data.savedAt?new Date(data.savedAt).toLocaleString('vi-VN'):'OK');
+      showToast('Tải lại thành công! '+countDone()+'/'+TOTAL_QS+' câu.','ti-upload');
+    }catch(ex){showToast('Lỗi đọc file: '+ex.message,'ti-alert-triangle');}
+  };
+  r.readAsText(file);
+  document.getElementById('load_input').value='';
+}
+
+/* ── Restore UI state from A ── */
+function restoreUI(){
+  SESSIONS.forEach(function(s){s.qs.forEach(function(q){
+    var card=document.getElementById('qc_'+q.id);
+    if(!card)return;
+    var v=A[q.id];
+    var note=A[q.id+'_note'];
+    var isEmpty=(v===undefined||v===''||(Array.isArray(v)&&v.length===0));
+    card.classList.toggle('answered',!isEmpty);
+
+    if(q.type==='yn'||q.type==='yn3'){
+      card.querySelectorAll('.yn-btn').forEach(function(b){b.className='yn-btn'});
+      if(v){
+        var label=v==='yes'?'CÓ':v==='no'?'KHÔNG':'PHẦN NÀO';
+        var cls=v==='yes'?'sel-y':v==='no'?'sel-n':'sel-p';
+        card.querySelectorAll('.yn-btn').forEach(function(b){if(b.textContent.trim()===label)b.classList.add(cls)});
+      }
+    }else if(q.type==='select'){
+      card.querySelectorAll('.sel-btn').forEach(function(b,i){b.classList.toggle('sel',i===v)});
+    }else if(q.type==='multi'){
+      var arr=v||[];
+      card.querySelectorAll('.sel-btn').forEach(function(b){b.classList.toggle('sel',arr.indexOf(b.textContent.trim())>=0)});
+    }else if(q.type==='number'){
+      var inp=card.querySelector('input[type=number]');
+      if(inp&&v!==undefined)inp.value=v;
+    }else if(q.type==='text'){
+      var ti=card.querySelector('input.q-note');
+      if(ti&&v)ti.value=v;
+    }
+    var ta=card.querySelector('textarea');
+    if(ta&&note)ta.value=note;
+  })});
+}
+
+/* ── Export Report as standalone HTML ── */
+function exportReportHTML(){
+  var rc=document.getElementById('result');
+  if(!rc||!rc.classList.contains('show')){
+    showToast('Hãy nhấn "Chấm điểm" trước khi lưu Báo cáo!','ti-alert-triangle');
+    return;
+  }
+  var meta='<b>Tên game:</b> '+(document.getElementById('m_name').value||'')+' | <b>Phiên bản:</b> '+(document.getElementById('m_ver').value||'')+' | <b>Người test:</b> '+(document.getElementById('m_who').value||'')+' | <b>Thiết bị:</b> '+(document.getElementById('m_dev').value||'')+' | <b>Ngày:</b> '+(document.getElementById('m_date').value||'');
+  var html='<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Báo cáo Prototype — '+(document.getElementById('m_name').value||'Game')+'</title>';
+  html+='<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">';
+  html+='<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">';
+  html+='<style>'+document.querySelector('style').textContent+'</style>';
+  html+='</head><body><div class="container">';
+  html+='<header class="hdr"><h1><i class="ti ti-report-analytics"></i> Báo cáo Đánh Giá Prototype Playtest</h1><p style="color:#cbd5e1;font-size:13px;margin-top:8px">'+meta+'</p></header>';
+  html+=rc.innerHTML;
+  html+='</div></body></html>';
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Prototype_Report_'+(document.getElementById('m_name').value||'game').replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();
+  showToast('Đã lưu Báo cáo HTML!','ti-file-download');
+}
+
+/* ── Pre-fill Visual Assessment (AI) — Bus Color Sort ── */
+(function prefillVisual(){
+  var preset={
+    v1:'yes', v2:'yes', v3:'yes', v4:'yes',
+    v5:'yes', v6:'yes', v7:'no', v8:1
+  };
+  var notes={
+    v1:'[AI] Palette sáng, saturated — đúng chuẩn hypercasual/Voodoo. Đỏ, xanh lá, vàng, tím, hồng, cam rõ ràng, dễ phân biệt cho gameplay color-sorting. BG thay đổi theo level range (xanh dương → hồng → kem/beige) tạo variety tốt. Match Bus Color Trip reference.',
+    v2:'[AI] 3D isometric cartoon nhất quán: bus rounded với ball cluster trên nóc, stickmen cute có shadow và badge count. Road flat dark teal tạo contrast tốt với element 3D. Style đúng chuẩn Voodoo hypercasual — gần Bus Color Trip, Mob Control.',
+    v3:'[AI] Bus có màu rõ + ball cluster trên nóc dễ nhận diện. Stickmen có badge count (số người) — UX tốt, biết ngay cần bao nhiêu. Road winding path rõ ràng. Column balls phía dưới clean, color-coded chính xác. Gate/barrier system visible. Tất cả element phục vụ gameplay trực quan.',
+    v4:'[AI] BG thay đổi mỗi ~10 levels: xanh sáng (L2-10) → hồng pastel (L20) → kem + cây xanh (L30) → xám nhẹ (L40) → hồng (L50). Mỗi BG đơn giản nhưng đủ mood, không distract gameplay. Subtle decoration ở edges (mây, đá, cây). Variety tốt hơn nhiều game cùng thể loại.',
+    v5:'[AI] Top bar consistent: gear icon | Level badge | coin counter. Bottom: ball columns + 3 booster slots (lock state rõ Lv.6/12/16). Bus counter "0/5" clean. Popup design đồng bộ (rounded corner, gradient header, cùng font). "New Feature Unlocked" screen polished. Lưu ý: dev build có SHOW CHEAT/ON OFF UI buttons — cần ẩn trước release.',
+    v6:'[AI] Font popup (ARE YOU SURE, LEVEL COMPLETE, NEW FEATURE) bold gradient game-y — đúng chuẩn hypercasual. Body text clean sans-serif, readable. Số trên stickmen badges rõ, contrast tốt. STARTER PACK/SPECIAL PACK font thương mại phù hợp. Size tổng thể OK cho mobile.',
+    v7:'[AI] Không phát hiện bug visual rõ: z-order đúng, texture đầy đủ, alignment chính xác. Bus cắt edge ở L5 là gameplay state (bus đang đi), không phải bug. "???" blocks trong column = locked content — intentional design. "Hold to view the board" text hơi nhỏ/dễ miss nhưng không phải lỗi visual.',
+    v8:'[AI] Visual 80-94% so với Bus Color Trip/Voodoo reference. 3D art polished, color-coding rõ ràng, UI clean và consistent, BG variety ấn tượng cho prototype. Minor gaps: dev buttons (SHOW CHEAT) cần ẩn, Level Complete screen hơi basic (chỉ trophy + coins, thiếu star rating/confetti chi tiết), "Hold to view" UX text có thể cải thiện.'
+  };
+  for(var k in preset)A[k]=preset[k];
+  for(var k in notes)A[k+'_note']=notes[k];
+
+  // Highlight buttons in DOM
+  var ynMap={v1:'yes',v2:'yes',v3:'yes',v4:'yes',v5:'yes',v6:'yes',v7:'no'};
+  for(var qid in ynMap){
+    var card=document.getElementById('qc_'+qid);
+    if(!card)continue;
+    card.classList.add('answered');
+    var val=ynMap[qid];
+    var label=val==='yes'?'CÓ':val==='no'?'KHÔNG':'PHẦN NÀO';
+    var cls=val==='yes'?'sel-y':val==='no'?'sel-n':'sel-p';
+    card.querySelectorAll('.yn-btn').forEach(function(b){
+      if(b.textContent.trim()===label){b.classList.add(cls);}
+    });
+    var ta=card.querySelector('textarea');
+    if(ta)ta.value=notes[qid]||'';
+    var idEl=card.querySelector('.q-id');
+    if(idEl&&!idEl.querySelector('.prefilled-tag')){
+      idEl.insertAdjacentHTML('beforeend','<span class="prefilled-tag"><i class="ti ti-sparkles"></i> AI</span>');
+    }
+  }
+  // Select button for v8
+  var v8card=document.getElementById('qc_v8');
+  if(v8card){
+    v8card.classList.add('answered');
+    var btns=v8card.querySelectorAll('.sel-btn');
+    if(btns[1])btns[1].classList.add('sel'); // index 1 = "80–94%"
+    var ta8=v8card.querySelector('textarea');
+    if(ta8)ta8.value=notes.v8||'';
+    var id8=v8card.querySelector('.q-id');
+    if(id8&&!id8.querySelector('.prefilled-tag')){
+      id8.insertAdjacentHTML('beforeend','<span class="prefilled-tag"><i class="ti ti-sparkles"></i> AI</span>');
+    }
+  }
+  updateProgress();
+})();
+</script>
+</body>
+</html>

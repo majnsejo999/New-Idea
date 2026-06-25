@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Đánh Giá Ý Tưởng Mới — Game Puzzle Di Động</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{--f:'Inter',system-ui,sans-serif;--bg:#f0f4f8;--card:#fff;--t1:#1e293b;--t2:#475569;--mt:#94a3b8;--bd:#e2e8f0;--bh:#cbd5e1;--go:#10b981;--go-l:#ecfdf5;--go-d:#065f46;--cd:#f59e0b;--cd-l:#fffbeb;--cd-d:#92400e;--st:#ef4444;--st-l:#fef2f2;--st-d:#991b1b;--br:#6366f1;--br-l:#eef2ff;--pp:#8b5cf6;--pp-l:#f5f3ff;--rl:14px;--rm:8px;--ss:0 1px 3px rgb(0 0 0/.06);--sm:0 4px 12px rgb(0 0 0/.08);--tr:all .2s ease}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);font-size:14px;line-height:1.6;padding:1.5rem 1rem}
+.container{max-width:960px;margin:0 auto}
+.hdr{background:linear-gradient(135deg,#312e81,#4338ca);padding:2rem;border-radius:var(--rl);color:#fff;margin-bottom:1.5rem;box-shadow:var(--sm)}
+.hdr h1{font-size:1.4rem;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.hdr p{color:#c7d2fe;font-size:.85rem;line-height:1.7}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600}
+.badge-p{background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)}
+.badge-g{background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)}
+.tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:#e2e8f0;padding:4px;border-radius:var(--rm);overflow-x:auto}
+.tab{font-size:11px;font-weight:600;padding:10px 6px;cursor:pointer;color:var(--t2);border-radius:var(--rm);white-space:nowrap;display:flex;align-items:center;gap:4px;transition:var(--tr);flex:1;justify-content:center}
+.tab:hover:not(.active){color:var(--t1);background:rgba(255,255,255,.5)}
+.tab.active{color:var(--t1);background:var(--card);box-shadow:var(--ss)}
+.tab .dot{width:7px;height:7px;border-radius:50%;display:none}.tab.done .dot{display:block;background:var(--go)}
+.pnl{display:none;animation:fi .2s ease}.pnl.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.prog-bar{background:var(--bd);border-radius:999px;height:8px;margin-bottom:1.5rem;overflow:hidden}
+.prog-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--br),var(--pp));transition:width .4s ease}
+.prog-lbl{font-size:12px;color:var(--t2);font-weight:500;margin-bottom:6px;display:flex;justify-content:space-between}
+.intro{padding:14px 18px;border-radius:var(--rm);margin-bottom:1.25rem;font-size:13px;line-height:1.7;border-left:4px solid var(--br);background:var(--br-l);color:#312e81}
+.sec{background:var(--card);border:1px solid var(--bd);border-radius:var(--rl);margin-bottom:1rem;overflow:hidden;box-shadow:var(--ss);transition:var(--tr)}
+.sec:hover{border-color:var(--bh);box-shadow:var(--sm)}
+.sec-hd{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f8fafc;cursor:pointer;user-select:none}
+.sec-hd:hover{background:#f1f5f9}
+.sec-title{flex:1;font-size:14px;font-weight:700;color:#1e293b}
+.sec-stat{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;background:#e2e8f0;color:var(--t2)}
+.chev{font-size:16px;color:var(--mt);transition:transform .2s}.chev.open{transform:rotate(180deg);color:var(--t1)}
+.sec-bd{display:none;padding:8px 18px 18px}.sec-bd.open{display:block}
+.qi{border-top:1px dashed var(--bd);padding:18px 0}.qi:first-child{border-top:none;padding-top:10px}
+.qi-label{font-size:14px;font-weight:600;color:#334155;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{display:inline-block;font-size:9px;padding:2px 8px;border-radius:4px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.tg-block{background:var(--st-l);color:var(--st-d);border:1px solid #fca5a5}
+.tg-imp{background:var(--cd-l);color:var(--cd-d);border:1px solid #fde68a}
+.qi-why{font-size:12px;color:#6d28d9;margin:8px 0;line-height:1.7;padding:10px 14px;background:#f5f3ff;border-radius:var(--rm);border:1px solid #e9d5ff;display:flex;align-items:flex-start;gap:6px}
+.qi-why i{font-size:14px;flex-shrink:0;margin-top:2px;color:#a78bfa}.qi-why span{flex:1}
+.qi-how{font-size:12px;margin:8px 0;line-height:1.7;padding:10px 14px;background:var(--go-l);border-radius:var(--rm);border-left:3px solid var(--go);color:#0f172a;display:none}
+.qi-trap{font-size:12px;margin:8px 0;line-height:1.7;padding:10px 14px;background:var(--st-l);border-radius:var(--rm);border-left:3px solid var(--st);color:var(--st-d);display:none}
+.toggle-row{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap}
+.qi-solo{font-size:12px;margin:8px 0;line-height:1.7;padding:10px 14px;background:#ecfeff;border-radius:var(--rm);border-left:3px solid #06b6d4;color:#155e75;display:none}
+.tog{font-size:11px;font-weight:500;color:var(--t2);cursor:pointer;padding:4px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--card);display:flex;align-items:center;gap:4px;transition:var(--tr)}
+.tog:hover{background:#f1f5f9;border-color:var(--bh);color:var(--t1)}
+.yn-row{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+.yn-btn{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--bd);background:#fff;color:var(--t2);transition:var(--tr)}
+.yn-btn:hover{border-color:var(--bh)}
+.yn-btn.sel-y{border-color:var(--go);background:var(--go-l);color:var(--go-d)}
+.yn-btn.sel-n{border-color:var(--st);background:var(--st-l);color:var(--st-d)}
+.yn-btn.sel-p{border-color:var(--cd);background:var(--cd-l);color:var(--cd-d)}
+.qi-note{width:100%;font-size:12.5px;padding:8px 12px;border:1px solid var(--bd);border-radius:var(--rm);background:#f8fafc;color:var(--t1);resize:vertical;min-height:44px;font-family:var(--f);margin-top:6px}
+.qi-note:focus{outline:none;border-color:var(--br);background:#fff;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.qi-input{width:100%;font-size:13px;padding:8px 12px;border:1px solid var(--bd);border-radius:var(--rm);background:#fff;color:var(--t1);font-family:var(--f)}
+.qi-input:focus{outline:none;border-color:var(--br);box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.sl-wrap{display:flex;align-items:center;gap:12px;background:#f8fafc;padding:8px 14px;border-radius:var(--rm);border:1px solid var(--bd);margin:8px 0}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;background:#e2e8f0;border-radius:999px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--br);cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,.15)}
+.sl-lbl{font-size:11px;font-weight:600;color:var(--mt)}
+.sl-val{font-size:16px;font-weight:800;min-width:24px;text-align:right;color:var(--br)}
+.sel-row{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap}
+.sel-btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--bd);background:#fff;color:var(--t2);transition:var(--tr)}
+.sel-btn:hover{border-color:var(--bh)}
+.sel-btn.sel{border-color:var(--br);background:var(--br-l);color:var(--br)}
+.verdict-pill{padding:1rem 1.25rem;border-radius:var(--rm);font-size:14px;font-weight:600;border-left:4px solid;margin:1rem 0;box-shadow:var(--ss)}
+.verdict-pill.vgo{background:var(--go-l);color:var(--go-d);border-color:var(--go)}
+.verdict-pill.vcd{background:var(--cd-l);color:var(--cd-d);border-color:var(--cd)}
+.verdict-pill.vst{background:var(--st-l);color:var(--st-d);border-color:var(--st)}
+.summary-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--rl);padding:2rem;box-shadow:var(--sm)}
+.big-score-wrap{display:flex;align-items:center;justify-content:space-between;background:#f8fafc;padding:1.5rem;border-radius:var(--rl);border:1px solid var(--bd);margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+.big-score{font-size:3.5rem;font-weight:800;line-height:1;letter-spacing:-.04em}
+.pbar-wrap{background:#f1f5f9;border-radius:999px;height:12px;overflow:hidden;margin-bottom:1.5rem;border:1px solid var(--bd)}
+.pbar{height:100%;border-radius:999px;transition:width .4s ease}
+.radar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.radar-lbl{font-size:12px;font-weight:600;color:var(--t2);width:200px;flex-shrink:0}
+.radar-bar-wrap{flex:1;background:#f1f5f9;border-radius:999px;height:8px;overflow:hidden;border:1px solid var(--bd)}
+.radar-bar{height:100%;border-radius:999px;transition:width .4s}
+.radar-val{font-size:12px;font-weight:700;min-width:36px;text-align:right}
+.issue-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:12px 0}
+.issue-card{padding:12px 16px;border-radius:var(--rm);font-size:12.5px;line-height:1.6;border-left:3px solid}
+.issue-card.cr{background:var(--st-l);border-color:var(--st);color:var(--st-d)}
+.issue-card.wr{background:var(--cd-l);border-color:var(--cd);color:var(--cd-d)}
+.issue-card.ok{background:var(--go-l);border-color:var(--go);color:var(--go-d)}
+.action-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:1rem}
+.action-card{background:#f8fafc;border:1px solid var(--bd);border-radius:var(--rm);padding:1.25rem}
+.action-head{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.action-body{font-size:12.5px;color:var(--t2);line-height:1.6}
+.note-area{width:100%;font-size:13px;padding:12px;border:1px solid var(--bd);border-radius:var(--rm);background:#fff;color:var(--t1);resize:vertical;min-height:80px;font-family:var(--f);margin-top:1rem}
+.note-area:focus{outline:none;border-color:var(--br);box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.btn{font-size:12px;font-weight:600;cursor:pointer;padding:8px 16px;border:1px solid;border-radius:6px;display:inline-flex;align-items:center;gap:4px;transition:var(--tr)}
+.btn-primary{background:var(--br);border-color:var(--br);color:#fff}.btn-primary:hover{background:#4f46e5}
+.btn-outline{background:#fff;border-color:var(--bd);color:var(--t2)}.btn-outline:hover{background:#f1f5f9}
+.btn-success{background:var(--go-l);border-color:rgba(16,185,129,.3);color:var(--go-d)}.btn-success:hover{background:#d1fae5}
+.btn-danger{background:#fff;border-color:var(--bd);color:#64748b}.btn-danger:hover{background:var(--st-l);border-color:#fca5a5;color:var(--st-d)}
+.export-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--rl);padding:1.5rem;margin-bottom:1.25rem;box-shadow:var(--ss)}
+.export-card h3{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:#fff;padding:12px 24px;border-radius:var(--rm);font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:999;opacity:0;transition:all .3s ease;display:flex;align-items:center;gap:8px}.save-indicator{position:fixed;top:12px;right:12px;font-size:11px;color:var(--go);background:var(--go-l);border:1px solid rgba(16,185,129,.3);padding:4px 12px;border-radius:6px;opacity:0;transition:opacity .3s;z-index:999}
+.save-indicator.show{opacity:1}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem}
+.mf{background:var(--card);border:1px solid var(--bd);border-radius:var(--rm);padding:12px;box-shadow:var(--ss)}
+.mf label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);display:block;margin-bottom:4px}
+.mf input,.mf select{width:100%;border:1px solid var(--bd);border-radius:6px;padding:8px 10px;font:13px var(--f);color:var(--t1);background:#f8fafc}
+.mf input:focus,.mf select:focus{outline:none;border-color:var(--br);box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="hdr">
+<h1><i class="ti ti-bulb"></i> Đánh Giá Ý Tưởng Mới — Game Puzzle Di Động</h1>
+<p>Bản đánh giá toàn diện cho ý tưởng game puzzle mới.</p>
+<div class="badges">
+<span class="badge badge-p"><i class="ti ti-list-check"></i> 5 phần · 13 tiêu chí chặn · Tự động chấm điểm /100</span>
+<span class="badge badge-g"><i class="ti ti-target-arrow"></i> Đối tượng: Nữ ~35 tuổi </span>
+</div>
+</header>
+
+<div class="meta-grid">
+<div class="mf"><label>Tên ý tưởng</label><input id="m_name" placeholder="VD: Hex Color Flow" onchange="autoSave()"></div>
+<div class="mf"><label>Mô tả 1 câu (core loop)</label><input id="m_desc" placeholder="Người chơi [hành động] để [mục tiêu]" onchange="autoSave()"></div>
+<div class="mf"><label>Người đánh giá</label><input id="m_reviewer" onchange="autoSave()"></div>
+<div class="mf"><label>Ngày</label><input type="date" id="m_date" onchange="autoSave()"></div>
+</div>
+
+<div class="prog-lbl"><span id="prog_lbl">0 / 0 câu đã trả lời</span><span id="prog_pct">0%</span></div>
+<div class="prog-bar"><div class="prog-fill" id="prog_bar" style="width:0%"></div></div>
+
+<nav class="tabs" id="tab_bar"></nav>
+<div id="panels"></div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="save-indicator" id="save_ind"></div>
+<script>
+/* ═══════════════════════════════════════════
+   DỮ LIỆU — Tất cả câu hỏi, hướng dẫn, lý do
+   ═══════════════════════════════════════════ */
+
+var A={};
+var scoreState={};
+function ans(id,v){A[id]=v;updateProg();markCard(id);autoSave()}
+function ansNote(id,v){A[id+'_note']=v;autoSave()}
+function markCard(id){var c=document.getElementById('qc_'+id);if(c){var v=A[id];c.classList.toggle('answered',v!==undefined&&v!==''&&!(Array.isArray(v)&&v.length===0))}}
+function autoSave(){
+ try{
+  var data={A:A,scoreState:scoreState,
+   meta:{m_name:document.getElementById('m_name').value,
+    m_desc:document.getElementById('m_desc').value,
+    m_reviewer:document.getElementById('m_reviewer').value,
+    m_date:document.getElementById('m_date').value},
+   savedAt:new Date().toISOString()};
+  localStorage.setItem('idea_eval_v2',JSON.stringify(data));
+  var ind=document.getElementById('save_ind');
+  ind.textContent='✓ Đã lưu tự động — '+new Date().toLocaleTimeString('vi-VN');
+  ind.classList.add('show');
+  clearTimeout(window._saveTimer);
+  window._saveTimer=setTimeout(function(){ind.classList.remove('show')},3000);
+ }catch(e){}
+}
+
+function autoLoad(){
+ try{
+  var raw=localStorage.getItem('idea_eval_v2');
+  if(!raw)return;
+  var data=JSON.parse(raw);
+  if(data.A)A=data.A;
+  if(data.scoreState){scoreState=data.scoreState}
+  if(data.meta){
+   if(data.meta.m_name)document.getElementById('m_name').value=data.meta.m_name;
+   if(data.meta.m_desc)document.getElementById('m_desc').value=data.meta.m_desc;
+   if(data.meta.m_reviewer)document.getElementById('m_reviewer').value=data.meta.m_reviewer;
+   if(data.meta.m_date)document.getElementById('m_date').value=data.meta.m_date;
+  }
+  // Restore UI states
+  Object.keys(A).forEach(function(k){
+   if(k.endsWith('_note')){
+    // restore notes - find textarea after qc_ element
+   }else{
+    markCard(k);
+    // Restore button highlights
+    var qc=document.getElementById('qc_'+k);
+    if(qc){
+     var v=A[k];
+     var btns=qc.querySelectorAll('.yn-btn');
+     btns.forEach(function(b){
+      var t=b.textContent.trim();
+      if((v==='yes'&&(t==='CÓ'||t==='ĐẠT'))||(v==='no'&&(t==='KHÔNG'||t==='CHƯA ĐẠT'))||(v==='partial'&&t==='MỘT PHẦN')){
+       ynHL(b);
+      }
+     });
+     // Restore select buttons
+     var selBtns=qc.querySelectorAll('.sel-btn');
+     selBtns.forEach(function(b){if(b.textContent.indexOf(v)!==-1||v===b.textContent.trim()){b.classList.add('sel')}});
+     // Restore textarea notes
+     var ta=qc.querySelector('.qi-note');
+     if(ta&&A[k+'_note'])ta.value=A[k+'_note'];
+     // Restore inputs
+     var inp=qc.querySelector('.qi-input');
+     if(inp&&typeof v==='string')inp.value=v;
+    }
+  }});
+  // Restore score sliders
+  Object.keys(scoreState).forEach(function(k){
+   var sv=document.getElementById('sv_'+k);
+   if(sv)sv.textContent=scoreState[k];
+   // find range input near sv_
+   var wrap=sv?sv.parentElement:null;
+   if(wrap){var rng=wrap.querySelector('input[type=range]');if(rng)rng.value=scoreState[k]}
+  });
+  updateProg();
+  showToast('Đã khôi phục dữ liệu đã lưu','ti-refresh');
+ }catch(e){}
+}
+var TABS=[
+{id:'t0',title:'Thông tin',icon:'ti-user'},
+{id:'t1',title:'Sàng lọc nhanh',icon:'ti-filter'},
+{id:'t2',title:'Kiểm chứng',icon:'ti-circle-check'},
+{id:'t3',title:'Đánh giá chi tiết',icon:'ti-clipboard-list'},
+{id:'t4',title:'Tổng hợp & Xuất',icon:'ti-award'}
+];
+
+/* ── TAB 1: SÀNG LỌC NHANH (Pre-filter 5 phút) ── */
+var PREFILTER=[
+{id:'pf1',
+ q:'Mechanic này đã có ít nhất 1 game ≥1 triệu lượt tải chứng minh chưa?',
+ why:'Mechanic đã proven giảm rủi ro từ "liệu người chơi có thích không" xuống "liệu mình làm tốt hơn không". Rủi ro thấp hơn rất nhiều so với thử thứ chưa ai làm.',
+ how:'<b>Cách làm:</b> Mô tả core action trong 3 từ (VD: "tap to sort") → Tìm trên AppMagic/Sensor Tower → Xem gameplay video → So sánh core action 1:1. Không cần cùng theme — chỉ cần cùng hành động chính.',
+ trap:'Đừng nhầm "puzzle logic" với "match-3". Phải map đúng core action (hành động tay), không phải thể loại chung.'
+},
+{id:'pf2',
+ q:'Thể loại game có ≥100 nghìn lượt tải/ngày toàn cầu không?',
+ why:'Đây là ngưỡng tối thiểu để quảng cáo UA có đủ lượng người dùng. Dưới 100K/ngày, chi phí để có 1 người dùng cao hơn giá trị họ mang lại.',
+ how:'<b>Cách làm:</b> AppMagic → Top 20 game cùng thể loại → Cộng lượt tải 30 ngày ÷ 30 = lượt tải/ngày. <b>Đạt:</b> ≥500K/ngày. <b>Cẩn thận:</b> 100K–500K. <b>Dừng:</b> <100K.',
+ trap:'Lượt tải toàn cầu đẹp nhưng 70% từ thị trường Tier 3 = doanh thu thực chỉ 10–15%.'
+},
+{id:'pf3',
+ q:'Core loop mô tả được trong 1 câu ≤15 từ không?',
+ why:'Game puzzle phải hiểu trong 5 giây. Nếu core loop không nói gọn trong 1 câu, người chơi sẽ không hiểu sau 30 giây onboarding → bỏ game.',
+ how:'<b>Cách làm:</b> Viết: "[Người chơi] + [hành động chính] + [mục tiêu]". Đưa câu này (không kèm hình) cho 3 người → nếu >1 người hiểu sai → cần đơn giản hóa.',
+ trap:'Cần hơn 1 câu = chưa xác định đúng core. Tự hỏi: "Hành động mà người chơi làm đi làm lại 1000 lần là gì?"'
+},
+{id:'pf4',
+ q:'Đội có thể build prototype trong ≤8 tuần không?',
+ why:'Thị trường di động thay đổi rất nhanh. Nếu mất >8 tuần, cửa sổ cơ hội có thể đã đóng — đối thủ ra game trước.',
+ how:'<b>Cách làm:</b> Ước tính: 2-4 tuần cho V1 prototype (30 levels, 1 giờ nội dung). Nếu cần >8 tuần → mechanic quá phức tạp hoặc đội thiếu kinh nghiệm.',
+ trap:'Đừng tính thời gian lạc quan. Luôn thêm 20% buffer. Solo dev thường mất gấp đôi dự kiến.'
+},
+{id:'pf5',
+ q:'Không vi phạm chính sách Apple/Google đã biết?',
+ why:'1 lần bị từ chối = mất 1-2 tuần. Vi phạm nghiêm trọng có thể bị cấm tài khoản nhà phát triển vĩnh viễn.',
+ how:'<b>Cách làm:</b> Kiểm tra 5 điểm: (1) Hộp quà có hiện tỷ lệ? (2) Vòng quay có minh bạch? (3) Quảng cáo giả giao diện? (4) Video quảng cáo có đúng gameplay? (5) Phân loại độ tuổi đúng?',
+ trap:'Chính sách thay đổi liên tục. Luôn kiểm tra ngày cập nhật chính sách mới nhất.'
+}
+];
+
+/* ── TAB 2: KIỂM CHỨNG Ý TƯỞNG (Verify Idea) ── */
+var VERIFY=[
+{id:'vi1',q:'Ý tưởng rõ ràng — trình bày tất cả luồng gameplay không bị mắc kẹt hay gây hiểu lầm',
+ why:'Nếu chính người tạo ra idea còn không trình bày rõ được, thì người chơi càng không thể hiểu. Đây là bài test đầu tiên cho chất lượng ý tưởng.',
+ how:'Trình bày idea cho 3 người khác nhau (không làm game) → Cả 3 đều hiểu đúng cách chơi, mục tiêu, điều kiện thắng/thua = ĐẠT.'},
+{id:'vi2',q:'Ý tưởng dễ hiểu — người nghe hiểu trong vòng 5 giây đầu tiên',
+ why:'Trên cửa hàng ứng dụng, người dùng quyết định tải hay không trong 3-5 giây nhìn screenshot/video. Không hiểu = không tải.',
+ how:'Cho xem 5 giây video hoặc ảnh gameplay → Hỏi "bạn phải làm gì?" → ≥2/3 trả lời đúng = ĐẠT.'},
+{id:'vi3',q:'Ý tưởng đã được kiểm chứng — kết hợp từ mechanic và cảm giác đã proven',
+ why:'Thử thứ hoàn toàn mới rủi ro cực cao. Kết hợp các yếu tố đã chứng minh giảm rủi ro xuống mức chấp nhận được.',
+ how:'Chỉ ra ≥1 game >1 triệu lượt tải có core action tương tự, HOẶC 1 video viral >1 triệu lượt xem về hoạt động tương tự.'},
+{id:'vi4',q:'Ý tưởng được tối ưu — nêu rõ điểm mạnh giữ lại và điểm yếu cần cải thiện so với game tham chiếu',
+ why:'Không biết mình giỏi hơn reference ở đâu = không có lý do để người chơi chuyển sang game mình. "Tốt hơn 1 chút" không đủ.',
+ how:'Viết bảng 2 cột: "GIỮ LẠI: [x, y, z]" và "CẢI THIỆN: [a, b, c]" với ≥3 mục mỗi bên. Phải cụ thể, không chung chung.'},
+{id:'vi5',q:'Ý tưởng thật sự mới — có thay đổi đủ lớn so với game gốc',
+ why:'Clone 1:1 thì thua về thương hiệu và lượng người dùng có sẵn. Cần sự khác biệt nhận ra được trong 30 giây để quảng cáo có hook.',
+ how:'Cho 3 người xem 30 giây gameplay idea vs reference → ≥2/3 chỉ ra được điểm khác = ĐẠT.'},
+{id:'vi6',q:'Ý tưởng có độ khó — tạo được level design với độ khó tăng dần đa dạng',
+ why:'Game chỉ có 2-3 biến số độ khó sẽ hết thử thách ở level 30-40. Người chơi bỏ game vì nhàm, không phải vì khó.',
+ how:'Liệt kê ≥5 biến số độ khó độc lập: kích thước board, số nước đi, số loại element, chướng ngại vật, mục tiêu kép…'}
+];
+
+/* ── TAB 3: ĐÁNH GIÁ CHI TIẾT 7 SECTION ── */
+var SECTIONS=[
+{id:'d1',icon:'📈',title:'Quy mô & Thị trường',items:[
+{id:'d1a',label:'Tín hiệu thị trường tương đồng chứng minh nhu cầu',tier:'blocker',
+ q:'Dù thể loại chưa có trên cửa hàng, có tín hiệu nào cho thấy nhu cầu tồn tại?',
+ why:'Không có thị trường proven = rủi ro cao nhất. Cần ít nhất 1 tín hiệu tương đồng để giảm rủi ro xuống mức chấp nhận được.',
+ how:'<b>Tìm ở đâu:</b> (1) TikTok/YouTube: video gameplay concept >1 triệu lượt xem? (2) Board game cùng mechanic bán chạy? (3) Mini-game trên Roblox/web cùng core loop có lượng người dùng cao? (4) Google Trends cho từ khóa liên quan.',
+ trap:'Video viral ≠ nhu cầu game. Video "satisfying" 100 triệu lượt xem nhưng game dựa trên đó D1 chỉ 30% vì core loop thiếu chiều sâu.'},
+{id:'d1b',label:'Test 5 người chưa chơi — bao nhiêu hiểu & hứng thú?',tier:'blocker',
+ q:'Đã cho 5 người (không làm game) xem concept? Bao nhiêu hiểu cách chơi? Bao nhiêu muốn chơi?',
+ why:'Đây là phương pháp xác nhận rẻ nhất và sớm nhất. Nếu 5 người không hiểu cách chơi thì quảng cáo UA sẽ thất bại dù mechanic hay thế nào.',
+ how:'<b>Quy trình:</b> (1) Cho xem 30 giây video gameplay. (2) Hỏi: "Bạn phải làm gì?". (3) Hỏi: "Bạn có muốn chơi không, tại sao?". <b>Đạt:</b> ≥4/5 hiểu + ≥3/5 hứng thú. <b>Dừng:</b> <3/5 hiểu.',
+ trap:'Người quen sẽ nói "hay đó" vì lịch sự. Cần hỏi hành vi cụ thể, không hỏi ý kiến.'},
+{id:'d1c',label:'Thời điểm xu hướng: đầu / giữa / cuối',tier:'important',
+ q:'Google Trends 12 tháng đang lên hay xuống? Số game mới ra mắt tăng hay giảm?',
+ why:'Thời điểm quyết định chi phí quảng cáo (CPI) và khả năng mở rộng. Đầu xu hướng CPI thấp, cuối xu hướng CPI cao gấp 3-5 lần.',
+ how:'<b>Bước 1:</b> Google Trends 12 tháng → đường cong lên/ngang/xuống. <b>Bước 2:</b> Số game mới ra mắt 60 ngày gần so với trước. Đầu: lên + ít đối thủ. Giữa: ngang. Cuối: xuống + tràn clone.',
+ trap:'Ngang ≠ ổn định. Kiểm tra CPI — nếu tăng 20%+ trong 3 tháng thì xu hướng đang chết.'},
+{id:'d1d',label:'Ước tính hoàn vốn có thực tế không',tier:'important',
+ q:'Với CPI + LTV dự kiến, bao nhiêu tháng để dương ROI?',
+ why:'Không tính hoàn vốn = đốt tiền mù quáng. Cần biết bao lâu để thu hồi vốn TRƯỚC KHI đầu tư nhân lực.',
+ how:'<b>Công thức:</b> Tháng hoàn vốn = CPI ÷ (LTV ÷ 30). <b>Đạt:</b> ≤9 tháng. <b>Dừng:</b> >18 tháng. Luôn stress-test: CPI ×1.5, LTV ×0.7.',
+ trap:'Dùng LTV từ game khác. LTV phụ thuộc quảng cáo, phiên chơi, khu vực — dùng ×0.5 benchmark.'}
+]},
+{id:'d2',icon:'🎮',title:'Core Mechanic & Gameplay',items:[
+{id:'d2a',label:'Core loop mô tả trong 1 câu, người mới hiểu ngay',tier:'blocker',
+ q:'Câu 1 dòng: [người chơi] + [hành động] + [mục tiêu]? Đã test 3 người chưa?',
+ why:'Đội phát triển cần 1 câu duy nhất làm kim chỉ nam. Nếu core loop không rõ, mỗi người hiểu khác nhau → prototype lệch hướng.',
+ how:'Đưa câu (KHÔNG kèm hình) cho 3 người. >1 hiểu sai → cần đơn giản hóa. Bỏ animation + âm thanh — game có còn vui không?',
+ trap:'Cần hơn 1 câu = chưa xác định đúng core.'},
+{id:'d2b',label:'Có game hit ≥1 triệu lượt tải cùng core mechanic',tier:'blocker',
+ q:'Tên game + lượt tải + ngày ra mắt? Map 1:1 hay chỉ tương tự?',
+ why:'Mechanic proven giảm rủi ro. Từ "liệu người dùng có thích?" xuống "liệu mình làm tốt hơn?".',
+ how:'Tìm trên AppMagic → xem video gameplay → tách về core mechanic. Map chính xác core action.',
+ trap:'"Puzzle logic" ≠ "Match-3". Phải map đúng hành động tay, không phải thể loại chung.'},
+{id:'d2c',label:'Đường cong độ khó có ≥5 biến số độc lập',tier:'blocker',
+ q:'5 biến số cụ thể? Mỗi biến xuất hiện từ level nào?',
+ why:'Dưới 5 biến = hết thử thách ở level 30-40. Người chơi bỏ vì nhàm chán, không phải vì khó.',
+ how:'Liệt kê: (1) Số element, (2) Số nước đi, (3) Số loại, (4) Chướng ngại vật, (5) Kích thước board, (6) Element đặc biệt, (7) Nhiều mục tiêu. Cần ≥5.',
+ trap:'Chỉ tăng số lượng = "nhiều hơn cùng kiểu". Độ khó thật = loại tư duy MỚI.'},
+{id:'d2d',label:'Rủi ro lớn nhất khi thể loại chưa proven? Phương án B?',tier:'important',
+ q:'Nếu mechanic không được đón nhận, chuyển hướng sang đâu? Kết hợp với mechanic proven nào?',
+ why:'Thể loại chưa proven = có thể không ai muốn chơi. Cần phương án B để không mất trắng đầu tư.',
+ how:'(1) Liệt kê 3 rủi ro: người dùng không hiểu, phiên chơi quá ngắn, không kiếm tiền được. (2) Mỗi rủi ro có kế hoạch giảm thiểu. (3) Phương án B: kết hợp mechanic proven nào?',
+ trap:'Đừng yêu ý tưởng quá mức. Thiên kiến đổi mới: nghĩ "chưa ai làm = cơ hội" nhưng thực tế có thể "chưa ai làm vì không khả thi".'}
+]},
+{id:'d3',icon:'💰',title:'Kiếm tiền',items:[
+{id:'d3a',label:'Chân dung người dùng + doanh thu trung bình/người',tier:'blocker',
+ q:'[Tuổi], [giới tính], [khu vực], [tần suất chơi], [thiết bị]. Doanh thu trung bình $/tháng?',
+ why:'Không biết người dùng là ai = không biết quảng cáo ở đâu. Doanh thu/người phụ thuộc khu vực rất nhiều (Mỹ gấp 10× Đông Nam Á).',
+ how:'Top 3 đối thủ → SimilarWeb Demographics. Đối chiếu Facebook Ad Library.',
+ trap:'Nhắm "casual gamer toàn cầu" → đấu thầu quảng cáo không hiệu quả. Phải cụ thể khu vực.'},
+{id:'d3b',label:'Vị trí đặt quảng cáo xen kẽ, không vi phạm quy tắc 5 phút đầu',tier:'blocker',
+ q:'Vòng chơi → điểm đặt quảng cáo? Level đầu tiên? Thời gian chờ giữa 2 lần?',
+ why:'Sai vị trí quảng cáo = mất người dùng (quá nhiều) hoặc mất doanh thu (quá ít). Đây là nguồn thu chính của casual game.',
+ how:'Không quảng cáo xen kẽ 5 phút đầu. Mỗi 3-4 levels. Thời gian chờ tối thiểu 45 giây.',
+ trap:'Tối ưu doanh thu ngày 1 thì lượng giữ chân ngày 7 sụp. Cần dữ liệu theo nhóm người dùng (cohort).'},
+{id:'d3c',label:'Quảng cáo thưởng ≥3 vị trí với giá trị đủ hấp dẫn',tier:'blocker',
+ q:'3 vị trí cụ thể: thưởng gì, khi nào kích hoạt, tỷ lệ chấp nhận dự kiến?',
+ why:'Quảng cáo thưởng = 30-40% tổng doanh thu quảng cáo. Tốt hơn quảng cáo xen kẽ về trải nghiệm vì người chơi chủ động xem.',
+ how:'(1) Hồi sinh +5 nước 40-60%. (2) Booster trước level 25-35%. (3) Nhân đôi phần thưởng 50-70%. Trung bình ≥30%.',
+ trap:'Thưởng quá dễ kiếm → người chơi xem vài lần rồi thôi. Gắn với điểm nghẽn thật sự.'},
+{id:'d3d',label:'Booster 3-4 loại, tỷ lệ miễn phí:trả tiền rõ ràng',tier:'important',
+ q:'Tên + hiệu ứng + giá từng booster? Tỷ lệ miễn phí:trả tiền?',
+ why:'Booster tạo bức tường tự nhiên — điểm người chơi sẵn sàng trả tiền. Không có booster = không có lý do chi tiền.',
+ how:'(1) Búa: trả tiền. (2) Bom: trả tiền. (3) Gợi ý: miễn phí hàng ngày. (4) +5 nước: trả tiền. Tỷ lệ 1 miễn phí : 3 trả tiền.',
+ trap:'Booster miễn phí ở level dễ = lãng phí hạn mức.'}
+]},
+{id:'d4',icon:'🛡️',title:'Chính sách & Sáng tạo',items:[
+{id:'d4a',label:'Không vi phạm chính sách Apple/Google 2024+',tier:'blocker',
+ q:'Đã kiểm tra: hộp quà, vòng quay, giao diện quảng cáo giả, gameplay lừa dối, phân loại tuổi?',
+ why:'1 lần bị từ chối = mất 1-2 tuần. Vi phạm nghiêm trọng có thể bị cấm tài khoản nhà phát triển.',
+ how:'Danh sách 5 điểm cứng. Nguồn: developer.apple.com + play.google.com/about/developer-content-policy',
+ trap:'Chính sách thay đổi thường xuyên. Luôn kiểm tra ngày cập nhật.'},
+{id:'d4b',label:'Có ≥3 góc quảng cáo sáng tạo khác nhau để thử nghiệm A/B',tier:'important',
+ q:'3 concept hook khác LOẠI (mồi tức giận / thỏa mãn / tò mò / thử thách)?',
+ why:'CPI phụ thuộc chất lượng quảng cáo. Không có góc sáng tạo = CPI cao gấp 2-3 lần.',
+ how:'(1) Thất bại→Thắng. (2) ASMR/Thỏa mãn. (3) Thử thách "Bạn giải được không?". IPM ≥4 là tốt.',
+ trap:'3 biến thể cùng 1 góc ≠ thử nghiệm A/B thật. Phải khác về LOẠI hook.'},
+{id:'d4c',label:'Quảng cáo có tận dụng được yếu tố mới lạ không?',tier:'important',
+ q:'Với ý tưởng mới, "chưa ai làm" chính là điểm bán hàng. Quảng cáo có khai thác được sự mới lạ để tạo khoảng cách tò mò không?',
+ why:'Với ý tưởng mới, sự mới lạ chính là điểm bán hàng. Nếu quảng cáo không truyền tải được, bỏ lỡ lợi thế lớn nhất.',
+ how:'Viết 3 câu hook: "Bạn chưa bao giờ chơi game kiểu này" / "Game puzzle hoàn toàn mới" / "Mechanic chưa từng có". Đánh giá hook nào mạnh nhất.',
+ trap:'"Độc đáo" không tự động = "hấp dẫn". Nhiều game độc đáo nhưng không ai muốn chơi. Sự mới lạ cũng hết nhanh.'}
+]},
+{id:'d5',icon:'🚀',title:'Định nghĩa MVP',items:[
+{id:'d5a',label:'Số level + thời gian chơi đủ cho giữ chân ngày 3',tier:'blocker',
+ q:'Tổng level × thời gian trung bình = thời gian chơi? Đủ ≥40 phút?',
+ why:'Thiếu nội dung = người chơi hết level ngày 2-3 → bỏ game. Lượng giữ chân ngày 3 sụp.',
+ how:'Dễ: 60-90 giây. Trung bình: 90-180 giây. Khó: 180-360 giây. Thử lại ×1.3. 50 levels ≈ 70-90 phút.',
+ trap:'Không tính thử lại = đánh giá thấp thời gian chơi.'},
+{id:'d5b',label:'Kịch bản quảng cáo đầy đủ: xen kẽ + thưởng + thời gian chờ',tier:'blocker',
+ q:'Quảng cáo xen kẽ sau level nào? Thời gian chờ? Thưởng 1/2/3? Banner?',
+ why:'Kịch bản quảng cáo = 50-70% doanh thu casual game. Không định nghĩa trước = lập trình viên tự ý triển khai sai.',
+ how:'Xen kẽ: level [N], mỗi [M] levels, chờ [45-60] giây, không [5] phút đầu. Thưởng A+B+C. Banner: chỉ ở menu chính.',
+ trap:'Không định nghĩa thời gian chờ → hiện 2 quảng cáo xen kẽ liên tiếp = mất người chơi.'},
+]},
+{id:'d6',icon:'🔄',title:'Giữ chân & Phiên chơi',items:[
+{id:'d6a',label:'Phiên chơi 5-8 phút, có điểm dừng tự nhiên',tier:'blocker',
+ q:'Thời lượng phiên chơi trung bình? Có điểm dừng tự nhiên (hết mạng, năng lượng)?',
+ why:'Phiên quá dài = ít phiên/ngày = ít lượt xem quảng cáo = doanh thu thấp. Hệ thống mạng sống là công cụ giữ chân mạnh nhất.',
+ how:'Chuẩn puzzle: 5-8 phút/phiên, 2-3 phiên/ngày. Mạng sống: 5 mạng, hồi 1 mạng/20 phút.',
+ trap:'Không có mạng sống → chơi liên tục → cạn nội dung → bỏ game.'},
+{id:'d6c',label:'Mục tiêu giữ chân D1/D7/D30 ghi rõ ràng',tier:'important',
+ q:'Mục tiêu cụ thể? Chuẩn so sánh nguồn nào? Ngưỡng dừng?',
+ why:'Không có mục tiêu = không biết game đang tốt hay tệ. Cần ngưỡng rõ để quyết định mở rộng/dừng.',
+ how:'Puzzle 2024-2025: D1: 35-45% (dừng <30%), D7: >20% (dừng <8%), D30: 20% (North Star). Thời gian chơi trung bình/ngày ≥30 phút.',
+ trap:'So sánh lượng giữ chân giữa các phân loại khác nhau = vô nghĩa. Match-3 ≠ word puzzle.'}
+]},
+{id:'d7',icon:'⚖️',title:'Rủi ro bản quyền',items:[
+{id:'d7a',label:'Tên game không trùng thương hiệu đã đăng ký',tier:'blocker',
+ q:'Đã tìm kiếm USPTO TESS + EUIPO TMview + cửa hàng ứng dụng?',
+ why:'Vi phạm thương hiệu = ứng dụng bị gỡ bất cứ lúc nào. Mất toàn bộ đầu tư + người dùng.',
+ how:'Bước 1: USPTO TESS. Bước 2: EUIPO TMview. Bước 3: Tìm trên cửa hàng. Trùng → đổi tên TRƯỚC KHI phát triển.',
+ trap:'Apple/Google gỡ ứng dụng ngay khi nhận DMCA.'},
+{id:'d7b',label:'Mechanic không vi phạm bằng sáng chế game đã biết',tier:'important',
+ q:'Đã kiểm tra bằng sáng chế King, Zynga, EA? Giao diện có quá giống?',
+ why:'Copy giao diện cụ thể bị kiện trade dress. An toàn hơn là tạo nhận diện hình ảnh riêng.',
+ how:'Chụp ảnh game mình vs game tham chiếu → có phân biệt được không?',
+ trap:'Copy giao diện + luồng dù mechanic khác vẫn bị gỡ.'}
+]}
+];
+
+
+/* ═══════════════════════════════════════════
+   RENDER & LOGIC
+   ═══════════════════════════════════════════ */
+function showToast(msg,icon){var t=document.getElementById('toast');t.innerHTML='<i class="ti '+(icon||'ti-check')+'" style="font-size:16px"></i> '+msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+function switchTab(n){TABS.forEach(function(_,i){var p=document.getElementById('pnl_'+i);if(p)p.classList.toggle('active',i===n);var tb=document.getElementById('tb_'+i);if(tb)tb.classList.toggle('active',i===n)})}
+function toggleEl(id){var el=document.getElementById(id);if(el)el.style.display=el.style.display==='block'?'none':'block'}
+function toggleSec(id){var b=document.getElementById('sb_'+id),c=document.getElementById('sc_'+id);if(b)b.classList.toggle('open');if(c)c.classList.toggle('open')}
+
+function ynHL(el){el.parentElement.querySelectorAll('.yn-btn').forEach(function(b){b.className='yn-btn'});var t=el.textContent.trim();el.classList.add(t==='CÓ'||t==='ĐẠT'?'sel-y':t==='KHÔNG'||t==='CHƯA ĐẠT'?'sel-n':'sel-p')}
+
+function updateProg(){
+ var total=PREFILTER.length+VERIFY.length;
+ SECTIONS.forEach(function(s){total+=s.items.length});
+ var done=0;
+ var keys=[].concat(PREFILTER.map(function(x){return x.id}),VERIFY.map(function(x){return x.id}));
+ SECTIONS.forEach(function(s){s.items.forEach(function(x){keys.push(x.id)})});
+ keys.forEach(function(k){if(A[k]!==undefined&&A[k]!=='')done++});
+ var pct=total>0?Math.round(done/total*100):0;
+ document.getElementById('prog_lbl').textContent=done+' / '+total+' câu đã trả lời';
+ document.getElementById('prog_pct').textContent=pct+'%';
+ document.getElementById('prog_bar').style.width=pct+'%';
+}
+
+// Tab bar
+var tbHTML='';
+TABS.forEach(function(t,i){tbHTML+='<div class="tab'+(i===0?' active':'')+'" id="tb_'+i+'" onclick="switchTab('+i+')"><i class="ti '+t.icon+'"></i> '+t.title+'<span class="dot"></span></div>'});
+document.getElementById('tab_bar').innerHTML=tbHTML;
+
+// Render panels
+var pnlContainer=document.getElementById('panels');
+var allPnlHTML='';
+
+// ── Tab 0: Thông tin ──
+allPnlHTML+='<div class="pnl active" id="pnl_0"><div class="intro"><i class="ti ti-info-circle"></i> <b>Bước 1:</b> Điền thông tin cơ bản của ý tưởng. Chọn loại mechanic và cảm xúc chính mà game nhắm tới.</div>';
+allPnlHTML+='<div class="sec"><div class="sec-hd"><span>🎮</span><div class="sec-title">Loại Mechanic</div></div><div class="sec-bd open"><div class="qi"><div class="qi-label">Chọn mechanic chính</div>';
+allPnlHTML+='<div class="qi-why"><i class="ti ti-bulb"></i><span>Voodoo đã xác định 8 mechanic tiềm năng nhất cho 2025. Việc xác định rõ mechanic giúp tìm đúng đối thủ, đúng game tham chiếu và đúng hướng đổi mới.</span></div>';
+var mechs=['Sort (Sắp xếp)','Auto-sort (Tự sắp xếp)','Aim (Nhắm bắn đơn giản)','Docker (Xếp vào dock)','Stacking (Xếp chồng)','Color Takeover (Chiếm vùng màu)','Pathfinding (Tìm đường)','Block Puzzle (Xếp khối)','Khác'];
+allPnlHTML+='<div class="sel-row">';mechs.forEach(function(m){allPnlHTML+='<button class="sel-btn" onclick="ans(\'mechanic\',\''+m+'\');selHL2(this)">'+m+'</button>'});
+allPnlHTML+='</div><textarea class="qi-note" placeholder="Ghi chú thêm về mechanic..." onchange="ansNote(\'mechanic\',this.value)"></textarea></div></div></div>';
+allPnlHTML+='<div class="sec"><div class="sec-hd"><span>💫</span><div class="sec-title">Cảm xúc chính</div></div><div class="sec-bd open"><div class="qi"><div class="qi-label">Game nhắm vào cảm xúc nào?</div>';
+allPnlHTML+='<div class="qi-why"><i class="ti ti-bulb"></i><span>Mỗi game thành công đều có 1 cảm xúc chính rõ ràng. Cảm xúc này quyết định mọi lựa chọn thiết kế: có đồng hồ hay không, nhanh hay chậm, sắp xếp hay nổ tung.</span></div>';
+var emos=[{n:'ASMR / Thỏa mãn',d:'Mọi thứ vào đúng chỗ, sạch sẽ, gọn gàng. Êm dịu, dọn dẹp, sắp xếp.'},{n:'Adrenaline / Hồi hộp',d:'Căng thẳng xen kẽ tập trung. Chạm nhanh, "zone" state, suýt thua.'},{n:'Thông minh / Thỏa mãn chiến thuật',d:'Suy nghĩ → hành động → chuỗi phản ứng. "Mình giỏi quá!"'}];
+emos.forEach(function(e){allPnlHTML+='<div style="padding:8px 12px;margin:4px 0;border:1px solid var(--bd);border-radius:var(--rm);cursor:pointer;transition:var(--tr)" onclick="ans(\'emotion\',\''+e.n+'\');emoHL(this)" class="emo-opt"><b>'+e.n+'</b><br><span style="font-size:12px;color:var(--t2)">'+e.d+'</span></div>'});
+allPnlHTML+='</div></div></div></div>';
+
+// ── Tab 1: Sàng lọc nhanh ──
+allPnlHTML+='<div class="pnl" id="pnl_1"><div class="intro"><i class="ti ti-alert-triangle"></i> <b>Sàng lọc 5 phút:</b> Trả lời 5 câu CÓ/KHÔNG. <b>Bất kỳ câu nào KHÔNG → DỪNG NGAY</b>, tiết kiệm 8-12 giờ nghiên cứu.</div>';
+PREFILTER.forEach(function(pf){
+allPnlHTML+='<div class="sec"><div class="sec-bd open"><div class="qi" id="qc_'+pf.id+'"><div class="qi-label">'+pf.q+'</div>';
+allPnlHTML+='<div class="qi-why"><i class="ti ti-bulb"></i><span><b>Tại sao hỏi:</b> '+pf.why+'</span></div>';
+allPnlHTML+='<div class="toggle-row"><span class="tog" onclick="toggleEl(\'how_'+pf.id+'\')"><i class="ti ti-flask"></i> Cách làm</span><span class="tog" onclick="toggleEl(\'trap_'+pf.id+'\')"><i class="ti ti-alert-triangle"></i> Bẫy thường gặp</span></div>';
+allPnlHTML+='<div class="qi-how" id="how_'+pf.id+'">'+pf.how+'</div>';
+allPnlHTML+='<div class="qi-trap" id="trap_'+pf.id+'"><b>⚠ Bẫy:</b> '+pf.trap+'</div>';
+allPnlHTML+='<div class="yn-row"><button class="yn-btn" onclick="ans(\''+pf.id+'\',\'yes\');ynHL(this)">CÓ</button><button class="yn-btn" onclick="ans(\''+pf.id+'\',\'no\');ynHL(this)">KHÔNG</button></div>';
+allPnlHTML+='<textarea class="qi-note" placeholder="Ghi chú..." onchange="ansNote(\''+pf.id+'\',this.value)"></textarea>';
+allPnlHTML+='</div></div></div>'});
+allPnlHTML+='<div id="pf_verdict"></div></div>';
+
+// ── Tab 2: Kiểm chứng ──
+allPnlHTML+='<div class="pnl" id="pnl_2"><div class="intro"><i class="ti ti-circle-check"></i> <b>Kiểm chứng ý tưởng:</b> 6 tiêu chí cốt lõi. Cần ít nhất <b>5/6 ĐẠT</b> để tiếp tục.</div>';
+VERIFY.forEach(function(v){
+allPnlHTML+='<div class="sec"><div class="sec-bd open"><div class="qi" id="qc_'+v.id+'"><div class="qi-label">'+v.q+'</div>';
+allPnlHTML+='<div class="qi-why"><i class="ti ti-bulb"></i><span><b>Tại sao hỏi:</b> '+v.why+'</span></div>';
+allPnlHTML+='<div class="qi-how" style="display:block">'+v.how+'</div>';
+allPnlHTML+='<div class="yn-row"><button class="yn-btn" onclick="ans(\''+v.id+'\',\'yes\');ynHL(this)">ĐẠT</button><button class="yn-btn" onclick="ans(\''+v.id+'\',\'no\');ynHL(this)">CHƯA ĐẠT</button></div>';
+allPnlHTML+='<textarea class="qi-note" placeholder="Ghi chú..." onchange="ansNote(\''+v.id+'\',this.value)"></textarea>';
+allPnlHTML+='</div></div></div>'});
+allPnlHTML+='</div>';
+
+// ── Tab 3: Đánh giá chi tiết ──
+allPnlHTML+='<div class="pnl" id="pnl_3"><div class="intro"><i class="ti ti-clipboard-list"></i> <b>Đánh giá chi tiết 7 hạng mục.</b> Tiêu chí có tag <span class="tag tg-block">CHẶN</span> = bắt buộc phải ĐẠT, nếu KHÔNG thì toàn bộ ý tưởng bị chặn.</div>';
+SECTIONS.forEach(function(sec,si){
+allPnlHTML+='<div class="sec"><div class="sec-hd" onclick="toggleSec(\''+sec.id+'\')"><span>'+sec.icon+'</span><div class="sec-title">'+sec.title+'</div><div class="sec-stat" id="ss_'+sec.id+'">0/'+sec.items.length+'</div><i class="ti ti-chevron-down chev'+(si<2?' open':'')+'" id="sc_'+sec.id+'"></i></div><div class="sec-bd'+(si<2?' open':'')+'" id="sb_'+sec.id+'">';
+sec.items.forEach(function(item){
+var tierTag=item.tier==='blocker'?'<span class="tag tg-block">CHẶN</span>':'<span class="tag tg-imp">QUAN TRỌNG</span>';
+allPnlHTML+='<div class="qi" id="qc_'+item.id+'"><div class="qi-label">'+item.label+' '+tierTag+'</div>';
+allPnlHTML+='<div style="font-size:13px;color:var(--t2);margin:4px 0;padding:8px 12px;background:#f8fafc;border-radius:var(--rm);border:1px solid var(--bd)">'+item.q+'</div>';
+allPnlHTML+='<div class="qi-why"><i class="ti ti-bulb"></i><span><b>Tại sao hỏi:</b> '+item.why+'</span></div>';
+allPnlHTML+='<div class="toggle-row"><span class="tog" onclick="toggleEl(\'how_'+item.id+'\')"><i class="ti ti-flask"></i> Cách làm</span><span class="tog" onclick="toggleEl(\'trap_'+item.id+'\')"><i class="ti ti-alert-triangle"></i> Bẫy thường gặp</span></div>';
+allPnlHTML+='<div class="qi-how" id="how_'+item.id+'">'+item.how+'</div>';
+allPnlHTML+='<div class="qi-trap" id="trap_'+item.id+'"><b>⚠ Bẫy:</b> '+item.trap+'</div>';
+allPnlHTML+='<div class="yn-row"><button class="yn-btn" onclick="ans(\''+item.id+'\',\'yes\');ynHL(this)">ĐẠT</button><button class="yn-btn" onclick="ans(\''+item.id+'\',\'partial\');ynHL(this)">MỘT PHẦN</button><button class="yn-btn" onclick="ans(\''+item.id+'\',\'no\');ynHL(this)">CHƯA ĐẠT</button></div>';
+allPnlHTML+='<textarea class="qi-note" placeholder="Ghi chú / bằng chứng..." onchange="ansNote(\''+item.id+'\',this.value)"></textarea></div>'});
+allPnlHTML+='</div></div>'});
+allPnlHTML+='<button class="btn btn-primary" style="width:100%;padding:14px;font-size:15px;margin-top:1rem" onclick="calcFinal();switchTab(4)"><i class="ti ti-calculator"></i> Tính điểm tự động & Xem kết luận</button>';
+allPnlHTML+='</div>';
+
+// ── Tab 4: Tổng hợp & Xuất ──
+allPnlHTML+='<div class="pnl" id="pnl_4"><div id="final_result"></div>';
+allPnlHTML+='<div class="export-card"><h3><i class="ti ti-file-export"></i> Xuất báo cáo</h3>';
+allPnlHTML+='<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" onclick="exportJSON()"><i class="ti ti-clipboard-copy"></i> Sao chép JSON</button><button class="btn btn-success" onclick="downloadJSON()"><i class="ti ti-download"></i> Tải file .json</button><button class="btn btn-outline" onclick="exportText()"><i class="ti ti-file-text"></i> Báo cáo chữ</button><button class="btn btn-danger" onclick="resetAll()"><i class="ti ti-refresh"></i> Đặt lại tất cả</button></div>';
+allPnlHTML+='<textarea class="note-area" id="export_area" placeholder="Kết quả xuất sẽ hiện ở đây..." style="font-family:monospace;font-size:11px;min-height:120px;margin-top:12px"></textarea>';
+allPnlHTML+='</div></div>';
+
+pnlContainer.innerHTML=allPnlHTML;
+
+function selHL2(el){el.parentElement.querySelectorAll('.sel-btn').forEach(function(b){b.classList.remove('sel')});el.classList.add('sel')}
+function emoHL(el){document.querySelectorAll('.emo-opt').forEach(function(e){e.style.borderColor='var(--bd)';e.style.background='#fff'});el.style.borderColor='var(--br)';el.style.background='var(--br-l)'}
+
+function calcFinal(){
+ // Map answers to scores: yes=4, partial=2, no=0
+ function aScore(id){var v=A[id];if(v==='yes')return 4;if(v==='partial')return 2;return 0}
+ 
+ // Pillar 1: Quy mô & Thị trường (20%) — from d1a,d1b,d1c,d1d
+ var p1_items=['d1a','d1b','d1c','d1d'];
+ var p1_got=p1_items.reduce(function(a,id){return a+aScore(id)},0);
+ var p1_max=p1_items.length*4;
+ 
+ // Pillar 2: Mechanic & Gameplay (25%) — from d2a,d2b,d2c,d2d
+ var p2_items=['d2a','d2b','d2c','d2d'];
+ var p2_got=p2_items.reduce(function(a,id){return a+aScore(id)},0);
+ var p2_max=p2_items.length*4;
+ 
+ // Pillar 3: Kiếm tiền (25%) — from d3a,d3b,d3c,d3d
+ var p3_items=['d3a','d3b','d3c','d3d'];
+ var p3_got=p3_items.reduce(function(a,id){return a+aScore(id)},0);
+ var p3_max=p3_items.length*4;
+ 
+ // Pillar 4: Rủi ro thực thi (15%) — from d4a,d4b,d4c + d5a,d5b
+ var p4_items=['d4a','d4b','d4c','d5a','d5b'];
+ var p4_got=p4_items.reduce(function(a,id){return a+aScore(id)},0);
+ var p4_max=p4_items.length*4;
+
+ // Pillar 5: Giữ chân & Tương tác (15%) — from d6a,d6c + d7a,d7b
+ var p5_items=['d6a','d6c','d7a','d7b'];
+ var p5_got=p5_items.reduce(function(a,id){return a+aScore(id)},0);
+ var p5_max=p5_items.length*4;
+
+ var catData=[
+  {title:'📈 Quy mô & Tín hiệu thị trường',w:20,pct:p1_max>0?p1_got/p1_max:0},
+  {title:'🎮 Mechanic & Gameplay',w:25,pct:p2_max>0?p2_got/p2_max:0},
+  {title:'💰 Kiếm tiền',w:25,pct:p3_max>0?p3_got/p3_max:0},
+  {title:'⚡ Rủi ro thực thi',w:15,pct:p4_max>0?p4_got/p4_max:0},
+  {title:'🔄 Giữ chân & Tương tác',w:15,pct:p5_max>0?p5_got/p5_max:0}
+ ];
+ 
+ var total=0;
+ catData.forEach(function(c){total+=c.pct*c.w});
+ total=Math.round(total);
+ var clr=total>=70?'var(--go)':total>=50?'var(--cd)':'var(--st)';
+
+ // Blocker check
+ var blockerFails=[];
+ SECTIONS.forEach(function(s){s.items.forEach(function(item){
+  if(item.tier==='blocker'&&A[item.id]==='no')blockerFails.push(item.label)
+ })});
+
+ // Pre-filter fails
+ var pfFails=[];
+ PREFILTER.forEach(function(pf){if(A[pf.id]==='no')pfFails.push(pf.q.substring(0,60)+'...')});
+
+ var h='<div class="summary-card">';
+ h+='<div class="big-score-wrap"><div><div style="font-size:12px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Điểm Đánh Giá Ý Tưởng</div><div class="big-score" style="color:'+clr+'">'+total+'</div></div><div style="font-size:12px;color:var(--t2);text-align:right;line-height:1.6">Tối đa 100<br><b style="color:var(--go)">TIẾN HÀNH ≥70</b> | <b style="color:var(--cd)">CÓ ĐIỀU KIỆN 50-69</b> | <b style="color:var(--st)">DỪNG &lt;50</b></div></div>';
+ h+='<div class="pbar-wrap"><div class="pbar" style="width:'+total+'%;background:'+clr+'"></div></div>';
+
+ h+='<div style="font-size:14px;font-weight:700;margin-bottom:12px"><i class="ti ti-chart-radar" style="color:var(--br)"></i> Phân rã 5 trụ:</div>';
+ catData.forEach(function(c){
+  var pp=Math.round(c.pct*100);var cl=pp>=75?'var(--go)':pp>=50?'var(--cd)':'var(--st)';
+  h+='<div class="radar-row"><div class="radar-lbl">'+c.title+' ('+c.w+'%)</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:'+pp+'%;background:'+cl+'"></div></div><div class="radar-val" style="color:'+cl+'">'+pp+'%</div></div>'});
+
+ if(pfFails.length>0){
+  h+='<div style="background:var(--st-l);border:1px solid #fee2e2;padding:14px 18px;border-radius:var(--rm);margin:1rem 0"><div style="font-size:13px;font-weight:700;color:var(--st-d);margin-bottom:8px"><i class="ti ti-alert-octagon"></i> KHÔNG QUA SÀNG LỌC NHANH:</div>'+pfFails.map(function(f){return '<div style="padding:3px 0;font-size:12.5px;color:var(--st-d)"><i class="ti ti-circle-x"></i> '+f+'</div>'}).join('')+'</div>'}
+ if(blockerFails.length>0){
+  h+='<div style="background:var(--st-l);border:1px solid #fee2e2;padding:14px 18px;border-radius:var(--rm);margin:1rem 0"><div style="font-size:13px;font-weight:700;color:var(--st-d);margin-bottom:8px"><i class="ti ti-alert-octagon"></i> '+blockerFails.length+' TIÊU CHÍ CHẶN CHƯA ĐẠT:</div>'+blockerFails.map(function(f){return '<div style="padding:3px 0;font-size:12.5px;color:var(--st-d)"><i class="ti ti-circle-x"></i> '+f+'</div>'}).join('')+'</div>'}
+
+ if(pfFails.length>0||blockerFails.length>0){
+  h+='<div class="verdict-pill vst"><i class="ti ti-alert-octagon"></i> <b>DỪNG</b> — Có tiêu chí chặn chưa đạt. Cần giải quyết trước khi tiếp tục.</div>';
+ }else if(total>=70){
+  h+='<div class="verdict-pill vgo"><i class="ti ti-rocket"></i> <b>TIẾN HÀNH ('+total+'/100)</b> — Ý tưởng đủ mạnh. Viết brief → Prototype 2-4 tuần.</div>';
+ }else if(total>=50){
+  h+='<div class="verdict-pill vcd"><i class="ti ti-alert-triangle"></i> <b>CÓ ĐIỀU KIỆN ('+total+'/100)</b> — Tiềm năng nhưng cần cải thiện. Deadline: 1 tuần.</div>';
+ }else{
+  h+='<div class="verdict-pill vst"><i class="ti ti-circle-x"></i> <b>DỪNG ('+total+'/100)</b> — Lưu bài học. Chuyển sang ý tưởng tiếp theo.</div>'}
+
+ h+='<div style="font-size:14px;font-weight:700;margin-top:1.5rem"><i class="ti ti-target" style="color:var(--br)"></i> Chỉ số mục tiêu phát hành (Voodoo tháng 7/2025):</div>';
+ h+='<div class="issue-grid">';
+ h+='<div class="issue-card ok"><b>CPI (iOS Mỹ):</b> ≤ $2</div>';
+ h+='<div class="issue-card ok"><b>Giữ chân D7:</b> > 20%</div>';
+ h+='<div class="issue-card ok"><b>Giữ chân D14:</b> > 15%</div>';
+ h+='<div class="issue-card ok"><b>Thời gian chơi/ngày:</b> ≥ 30 phút</div>';
+ h+='<div class="issue-card ok"><b>APS (50 level đầu):</b> > 1.4</div>';
+ h+='</div>';
+
+ h+='<div style="font-size:14px;font-weight:700;margin-top:1.5rem"><i class="ti ti-list-checklist" style="color:var(--br)"></i> Hành động tiếp theo:</div>';
+ h+='<div class="action-grid">';
+ if(total>=70&&pfFails.length===0&&blockerFails.length===0){
+  h+='<div class="action-card"><div class="action-head" style="color:var(--go-d)">Tuần này</div><div class="action-body">Viết Brief chi tiết (dùng Brief Builder v1)</div></div>';
+  h+='<div class="action-card"><div class="action-head" style="color:var(--go-d)">Tuần 2-4</div><div class="action-body">Prototype 30 levels · 1 giờ nội dung · Test CPI video</div></div>';
+  h+='<div class="action-card"><div class="action-head" style="color:var(--go-d)">Tuần 5-6</div><div class="action-body">Playtest · Đánh giá prototype · Quyết định tiếp/dừng</div></div>';
+ }else if(total>=50){
+  h+='<div class="action-card"><div class="action-head" style="color:var(--cd-d)">Ngay lập tức</div><div class="action-body">Cải thiện các trụ dưới 50%. Tập trung tiêu chí CHẶN.</div></div>';
+  h+='<div class="action-card"><div class="action-head" style="color:var(--cd-d)">Sau 1 tuần</div><div class="action-body">Đánh giá lại. Nếu ≥70 → tiến hành. Nếu vẫn <70 → dừng.</div></div>';
+ }else{
+  h+='<div class="action-card"><div class="action-head" style="color:var(--st-d)">Lưu bài học</div><div class="action-body">Ghi lại những gì đã học. Ý tưởng nào hay? Thiếu gì?</div></div>';
+  h+='<div class="action-card"><div class="action-head" style="color:var(--st-d)">Tiếp tục</div><div class="action-body">Chuyển sang ý tưởng tiếp theo. Số lượng thử = xác suất thành công.</div></div>'}
+ h+='</div>';
+ h+='<textarea class="note-area" placeholder="Ghi chú kết luận tổng thể..."></textarea>';
+ h+='</div>';
+ document.getElementById('final_result').innerHTML=h;
+}
+
+function buildExport(){
+ function aScore(id){var v=A[id];if(v==='yes')return 4;if(v==='partial')return 2;return 0}
+ var p1=['d1a','d1b','d1c','d1d'],p2=['d2a','d2b','d2c','d2d'],p3=['d3a','d3b','d3c','d3d'];
+ var p4=['d4a','d4b','d4c','d5a','d5b'],p5=['d6a','d6c','d7a','d7b'];
+ function pctOf(arr){var g=arr.reduce(function(a,id){return a+aScore(id)},0);return arr.length*4>0?g/(arr.length*4):0}
+ var total=Math.round(pctOf(p1)*20+pctOf(p2)*25+pctOf(p3)*25+pctOf(p4)*15+pctOf(p5)*15);
+ return {pipeline_version:'1.0',stage:'idea',idea_origin:'new',
+  game_name:document.getElementById('m_name').value||'',
+  core_loop:document.getElementById('m_desc').value||'',
+  reviewer:document.getElementById('m_reviewer').value||'',
+  date:document.getElementById('m_date').value||'',
+  mechanic:A.mechanic||'',emotion:A.emotion||'',
+  scores:{total:total},answers:A}
+}
+function exportJSON(){var d=buildExport();var j=JSON.stringify(d,null,2);document.getElementById('export_area').value=j;navigator.clipboard.writeText(j).then(function(){showToast('Đã sao chép JSON!','ti-clipboard-check')})}
+function downloadJSON(){var d=buildExport();var j=JSON.stringify(d,null,2);var b=new Blob([j],{type:'application/json'});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download='idea_eval_'+(d.game_name||'game').replace(/[^a-zA-Z0-9]/g,'_')+'_'+d.date+'.json';a.click();URL.revokeObjectURL(u);showToast('Đã tải file!','ti-download')}
+function exportText(){
+ var d=buildExport();var lines=['=== ĐÁNH GIÁ Ý TƯỞNG MỚI ===','Tên: '+d.game_name,'Core loop: '+d.core_loop,'Người đánh giá: '+d.reviewer,'Ngày: '+d.date,'','Điểm tổng: '+d.scores.total+'/100'];
+ document.getElementById('export_area').value=lines.join('\n');showToast('Đã tạo báo cáo','ti-file-text')}
+function resetAll(){if(!confirm('Đặt lại tất cả câu trả lời về ban đầu?'))return;A={};scoreState={};localStorage.removeItem('idea_eval_v2');location.reload()}
+
+document.getElementById('m_date').value=new Date().toISOString().slice(0,10);
+updateProg();
+autoLoad();
+</script>
+</body>
+</html>
